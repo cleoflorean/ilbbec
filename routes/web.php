@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ── Landing Page ───────────────────────────────────────────────────────────────
@@ -15,9 +16,11 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login',    [AuthController::class, 'login'])->name('login.post');
+    Route::get('/user', [UserController::class, 'index'])->name('user.home');
 });
 
 // ── Logout (Auth only) ────────────────────────────────────────────────────────
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
+

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->increments('CaseId');
             $table->unsignedInteger('PendaftaranId');
             $table->unsignedInteger('SesiId')->nullable();
+            $table->string('Lokasi', 10)->nullable();
             $table->string('Kelompok', 15)->nullable();
             $table->integer('NilaiKasus')->nullable();
             $table->text('Catatan')->nullable();

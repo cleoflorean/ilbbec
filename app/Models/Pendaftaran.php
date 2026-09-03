@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pendaftaran extends Model
 {
-    protected $tabel = 'pendaftaran';
-    protected $primarykey = 'PendaftaranId';
+    protected $table = 'pendaftaran';
+    protected $primaryKey = 'PendaftaranId';
     protected $fillable = [
-        'UserId', 'Divisi', 'BerkasCV', 'Portofolio', 'StatusBerkas', ' StatusAkhir'
+        'UserId', 'Divisi', 'BerkasCV', 'Portofolio', 'StatusBerkas', 'StatusAkhir'
     ];
 
     public function users()
@@ -19,7 +19,7 @@ class Pendaftaran extends Model
     
     public function study_case()
     {
-        return $this->hasOne(StudyCase::class. 'PendaftaranId', 'PendaftaranId');
+        return $this->hasOne(StudyCase::class, 'PendaftaranId', 'PendaftaranId');
     }
 
     public function wawancara()
