@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>ILBBEC - International Logistics & Business Baccalaureate English Center | ULBI</title>
+    <meta name="description" content="ILBBEC is the premier Student Activity Unit at Universitas Logistik & Bisnis Internasional (ULBI) dedicated to English proficiency, global logistics & business acumen, debate leadership, and international networking.">
+    <meta name="keywords" content="ILBBEC, ULBI, English Center, International Logistics, Business English, English Debate, Student Activity Unit, Universitas Logistik dan Bisnis Internasional Bandung">
+    <meta name="author" content="ILBBEC ULBI">
+    
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:title" content="ILBBEC - Learn. Connect. Grow Globally.">
+    <meta property="og:description" content="Empowering ULBI students with English proficiency, international logistics & business knowledge, and global leadership skills.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="./images/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./images/logo.png">
+
+    <!-- Google Fonts: Poppins & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#1E40AF',       // Dominant Royal Blue
+                            'blue-dark': '#1E3A8A',
+                            'blue-light': '#3B82F6',
+                            'blue-50': '#EFF6FF',
+                            'blue-100': '#DBEAFE',
+                            navy: '#0F172A',       // Dark Navy for text & headers
+                            'navy-light': '#1E293B',
+                            orange: '#F97316',     // Accent Orange from logo shield
+                            'orange-dark': '#EA580C',
+                            'orange-light': '#FB923C',
+                            'orange-50': '#FFF7ED',
+                            'orange-100': '#FFEDD5',
+                            slate: '#64748B',
+                        }
+                    },
+                    boxShadow: {
+                        'premium': '0 20px 40px -15px rgba(30, 64, 175, 0.08)',
+                        'glow': '0 0 25px rgba(37, 99, 235, 0.25)',
+                        'card-hover': '0 22px 35px -10px rgba(15, 23, 42, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --royal-blue: #1E40AF;
+            --accent-orange: #F97316;
+            --dark-navy: #0F172A;
+            --bg-light: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #1E293B;
+            background-color: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94A3B8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1E40AF;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* Subtle animated gradient background */
+        .hero-mesh {
+            background-color: #ffffff;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.06) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.04) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(249, 115, 22, 0.03) 0px, transparent 50%);
+        }
+
+        /* Badge pulse animation */
+        @keyframes subtle-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.85; }
+        }
+        .pulse-subtle {
+            animation: subtle-pulse 3s infinite ease-in-out;
+        }
+
+        /* Modal backdrop transition */
+        .modal-active {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+        }
+
+        /* Smooth accordion collapse */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            opacity: 0;
+        }
+        .faq-answer.open {
+            max-height: 400px;
+            opacity: 1;
+        }
+
+        /* Active Nav indicator */
+        .nav-link.active {
+            color: #1E40AF;
+            font-weight: 600;
+        }
+        .nav-link.active::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #1E40AF;
+            border-radius: 2px;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-800 antialiased selection:bg-brand-blue selection:text-white">
+
+    <!-- ========================================================================= -->
+    <!-- TOP NOTIFICATION BANNER (ULBI Student Activity Unit Notice) -->
+    <!-- ========================================================================= -->
+    <div class="bg-gradient-to-r from-brand-navy via-brand-blue to-brand-navy text-white text-xs font-medium py-2 px-4 text-center relative z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap">
+            <span class="bg-brand-orange text-white px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">New Batch</span>
+            <span>ILBBEC ULBI Member Recruitment 2026 is officially open!</span>
+            <a href="#join" class="underline hover:text-brand-orange-light font-semibold ml-1 inline-flex items-center gap-1 transition-colors">
+                Apply Now 
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- NAVIGATION BAR -->
+    <!-- ========================================================================= -->
+    <header class="sticky top-0 z-40 w-full glass-nav border-b border-slate-100/80 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Brand Name -->
+                <a href="#home" class="flex items-center gap-3 group">
+                    <div class="relative w-12 h-12 flex-shrink-0 flex items-center justify-center p-0.5 bg-white rounded-xl shadow-sm border border-slate-100 group-hover:shadow-md transition-shadow">
+                        <img src="./images/logo.png" alt="ILBBEC Logo" class="w-full h-full object-contain">
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-extrabold text-xl tracking-tight text-brand-navy group-hover:text-brand-blue transition-colors">ILBBEC</span>
+                            <span class="text-[11px] font-bold px-1.5 py-0.5 rounded bg-brand-orange-50 text-brand-orange border border-brand-orange/20">ULBI</span>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium tracking-normal hidden sm:inline-block leading-tight">
+                            International Logistics & Business Baccalaureate English Center
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <a href="#home" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Home</a>
+                    <a href="#about" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">About</a>
+                    <a href="#activities" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Activities</a>
+                    <a href="#events" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Events</a>
+                    <a href="#gallery" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Gallery</a>
+                    <a href="#testimonials" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Voices</a>
+                    <a href="#faq" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">FAQ</a>
+                </nav>
+
+                <!-- Desktop CTA & Action -->
+                <div class="hidden md:flex items-center gap-3">
+                    <a href="#join" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-blue hover:bg-brand-blue-dark shadow-md hover:shadow-glow transition-all duration-300 group">
+                        <span>Join Us</span>
+                        <svg class="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="flex items-center md:hidden gap-2">
+                    <a href="#join" class="text-xs font-semibold px-3 py-1.5 bg-brand-blue text-white rounded-lg">Join</a>
+                    <button id="mobile-menu-btn" type="button" aria-label="Toggle navigation menu" class="p-2 rounded-xl text-slate-700 hover:text-brand-blue hover:bg-slate-100 focus:outline-none transition-colors">
+                        <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation (390×844 Viewport Optimized) -->
+        <div id="mobile-menu" class="hidden md:hidden border-b border-slate-200 bg-white/95 backdrop-blur-xl px-4 pt-2 pb-6 space-y-2 shadow-xl animate-fadeIn">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <img src="./images/logo.png" alt="ILBBEC Logo" class="w-7 h-7 object-contain">
+                    <span class="text-xs font-bold text-brand-navy">ILBBEC • ULBI</span>
+                </div>
+                <span class="text-[10px] text-brand-orange font-semibold bg-brand-orange-50 px-2 py-0.5 rounded-full">Recruitment Open</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-2">
+                <a href="#home" class="mobile-nav-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-brand-blue-50 hover:text-brand-blue transition-colors">
+                    <svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Home
+                </a>
+                <a href="#about" class="mobile-nav-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-brand-blue-50 hover:text-brand-blue transition-colors">
+                    <svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    About
+                </a>
+                <a href="#activities" class="mobile-nav-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-brand-blue-50 hover:text-brand-blue transition-colors">
+                    <svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    Activities
+                </a>
+                <a href="#events" class="mobile-nav-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-brand-blue-50 hover:text-brand-blue transition-colors">
+                    <svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Events
+                </a>
+                <a href="#gallery" class="mobile-nav-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-brand-blue-50 hover:text-brand-blue transition-colors">
+                    <svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Gallery
+                </a>
+                <a href="#faq" class="mobile-nav-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-brand-blue-50 hover:text-brand-blue transition-colors">
+                    <svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    FAQ
+                </a>
+            </div>
+            <div class="pt-3">
+                <a href="#join" class="mobile-nav-link flex items-center justify-center w-full py-3 px-4 rounded-xl text-sm font-semibold text-white bg-brand-blue hover:bg-brand-blue-dark shadow-md">
+                    Apply for Membership 2026
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION (Spacious Two-Column Desktop / Mobile Stacked) -->
+    <section id="home" class="relative hero-mesh pt-8 pb-16 md:pt-16 md:pb-24 lg:pt-20 lg:pb-28 overflow-hidden">
+        
+        <!-- Background Ambient Accents -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-blue-100/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+        <div class="absolute top-1/3 right-5 w-72 h-72 bg-brand-orange-100/50 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                
+                <!-- Left Column: Hero Content -->
+                <div class="lg:col-span-7 flex flex-col items-start text-left space-y-6">
+                    
+                    <!-- Affiliation Pill Badge -->
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blue-50 border border-brand-blue-100 text-brand-blue shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-brand-orange pulse-subtle"></span>
+                        <span class="text-xs font-semibold tracking-wide uppercase">Activity Unit • ULBI Bandung</span>
+                    </div>
+
+                    <!-- Main Headline -->
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-brand-navy leading-[1.15]">
+                        Learn. Connect. <br class="hidden sm:inline">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-blue-600 to-brand-orange">
+                            Grow Globally.
+                        </span>
+                    </h1>
+
+                    <!-- Short Description -->
+                    <p class="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl">
+                        Empowering students of <span class="font-semibold text-brand-navy">Universitas Logistik & Bisnis Internasional</span> with fluent English communication, global logistics and business acumen, international debate leadership, and a world-class professional network.
+                    </p>
+
+                    <!-- CTAs & Trust Points -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto pt-2">
+                        <a href="#join" class="inline-flex items-center justify-center px-7 py-4 rounded-xl text-base font-semibold text-white bg-brand-blue hover:bg-brand-blue-dark shadow-lg shadow-brand-blue/20 hover:shadow-glow transition-all duration-300 group">
+                            <span>Join ILBBEC 2026</span>
+                            <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                        <a href="#activities" class="inline-flex items-center justify-center px-6 py-4 rounded-xl text-base font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:border-brand-blue/30 transition-all duration-300">
+                            <svg class="w-5 h-5 mr-2 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Explore Activities</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Hero High-Quality Image with Floating Glass Badges -->
+                <div class="lg:col-span-5 relative mt-4 lg:mt-0">
+                    
+                    <!-- Decorative background ring -->
+                    <div class="absolute -inset-4 bg-gradient-to-tr from-brand-blue/15 via-transparent to-brand-orange/15 rounded-3xl blur-xl -z-10"></div>
+                    
+                    <!-- Main Student Collaborating Image -->
+                    <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 aspect-[4/3] sm:aspect-[16/11]">
+                        <img 
+                          
+                            alt="ULBI Students Collaborating at ILBBEC" 
+                            class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                            loading="eager"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/60 via-transparent to-transparent"></div>
+                        
+                        <!-- Embedded Image Caption Badge -->
+                        <div class="absolute bottom-4 left-4 right-4 text-white">
+                            <p class="text-xs font-semibold tracking-wide uppercase text-brand-orange-light">ULBI International Community</p>
+                            <p class="text-sm font-bold truncate">Cross-Disciplinary English & Logistics Collaboration</p>
+                        </div>
+                    </div>
+
+                    <!-- Floating Glass Badge 1: Logistics & Business -->
+                    <div class="absolute -top-4 -right-2 sm:-right-4 glass-card px-3.5 py-2.5 rounded-2xl shadow-lg flex items-center gap-2.5 animate-bounce" style="animation-duration: 4s;">
+                        <div class="w-9 h-9 rounded-xl bg-brand-orange-50 text-brand-orange flex items-center justify-center flex-shrink-0 font-bold">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-brand-navy">Global Logistics</div>
+                            <div class="text-[10px] text-slate-500 font-medium">Business English</div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Glass Badge 2: Debate & Public Speaking -->
+                    <div class="absolute -bottom-5 -left-2 sm:-left-4 glass-card px-3.5 py-2.5 rounded-2xl shadow-lg flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-brand-blue-50 text-brand-blue flex items-center justify-center flex-shrink-0 font-bold">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-brand-navy">Public Speaking</div>
+                            <div class="text-[10px] text-slate-500 font-medium">Debate & Leadership</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- ABOUT ILBBEC SECTION (Who We Are, 4 Pillars, ULBI Ecosystem) -->
+    <!-- ========================================================================= -->
+    <section id="about" class="py-20 bg-slate-50/70 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-orange bg-brand-orange-50 px-3 py-1 rounded-full border border-brand-orange/20">
+                    About ILBBEC
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-4 tracking-tight">
+                    Shaping Tomorrow's Global Communicators & Logistics Leaders
+                </h2>
+                <div class="w-16 h-1 bg-brand-blue mx-auto mt-4 rounded-full"></div>
+                <p class="text-slate-600 text-base mt-4 leading-relaxed">
+                    ILBBEC is the official student center at <span class="font-semibold text-brand-navy">Universitas Logistik & Bisnis Internasional (ULBI)</span> dedicated to bridging specialized international logistics terminology, global commerce, and English language excellence.
+                </p>
+            </div>
+
+            <!-- 4 Core Pillars Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Pillar 1: English Fluency & Debate -->
+                <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-brand-blue-50 text-brand-blue flex items-center justify-center mb-5 group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-brand-navy mb-2 group-hover:text-brand-blue transition-colors">Global Communication</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Master fluent speech, spontaneous discussion, parliamentary debate, and diplomatic negotiation in an engaging 100% English atmosphere.
+                    </p>
+                </div>
+
+                <!-- Pillar 2: Logistics & Business Acumen -->
+                <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-brand-orange-50 text-brand-orange flex items-center justify-center mb-5 group-hover:bg-brand-orange group-hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-brand-navy mb-2 group-hover:text-brand-orange transition-colors">Logistics & Trade Acumen</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Acquire specialized international freight, supply chain terminology, trade contracts, and case-study presentation competence.
+                    </p>
+                </div>
+
+                <!-- Pillar 3: Leadership & Diplomacy -->
+                <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-brand-navy mb-2 group-hover:text-brand-blue transition-colors">Leadership & Networking</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Develop organizational management, cross-faculty collaboration, and join international student symposiums and youth forums.
+                    </p>
+                </div>
+
+                <!-- Pillar 4: Certification & Global Career -->
+                <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-brand-navy mb-2 group-hover:text-emerald-600 transition-colors">Career & Certifications</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Targeted preparation for TOEFL ITP/iBT, IELTS, business portfolio building, and job interview simulations for multinational corporations.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Interactive Value Banner -->
+            <div class="mt-12 bg-gradient-to-r from-brand-blue to-blue-800 rounded-3xl p-8 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-center md:text-left">
+                    <h3 class="text-xl sm:text-2xl font-bold">Why Join ILBBEC at ULBI?</h3>
+                    <p class="text-blue-100 text-sm max-w-xl">
+                        A welcoming, supportive student community where beginners build confidence and experienced speakers hone competitive mastery.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="#activities" class="px-5 py-3 rounded-xl bg-white text-brand-blue font-semibold text-sm hover:bg-blue-50 transition-colors shadow-md">
+                        Discover Programs
+                    </a>
+                    <a href="#join" class="px-5 py-3 rounded-xl bg-brand-orange text-white font-semibold text-sm hover:bg-brand-orange-dark transition-colors shadow-md">
+                        Register Now
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ACTIVITIES & PROGRAMS SECTION (Interactive Filterable Cards) -->
+    <section id="activities" class="py-20 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Title -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-50 px-3 py-1 rounded-full border border-brand-blue/20">
+                        Our Activities
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-3 tracking-tight">
+                        Flagship Programs & Weekly Sessions
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-2 max-w-2xl">
+                        Structured, engaging activities designed to develop speaking agility, critical thinking, business pitching, and exam readiness.
+                    </p>
+                </div>
+                
+                <!-- Category Filter Buttons -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 mt-6 md:mt-0 max-w-full">
+                    <button class="filter-btn active px-4 py-2 text-xs font-semibold rounded-xl bg-brand-blue text-white shadow-sm transition-all" data-category="all">
+                        All
+                    </button>
+                    <button class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all" data-category="speaking">
+                        Speaking & Debate
+                    </button>
+                    <button class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all" data-category="business">
+                        Logistics & Business
+                    </button>
+                    <button class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all" data-category="prep">
+                        TOEFL/IELTS Prep
+                    </button>
+                </div>
+            </div>
+
+            <!-- Activities Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="activities-grid">
+                
+                <!-- Program 1: English Debate & Speech Club -->
+                <div class="activity-card bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-card-hover transition-all duration-300 flex flex-col" data-category="speaking">
+                    <div class="relative h-48 overflow-hidden bg-slate-100">
+                        <img src="./images/activity-debate.jpg" alt="Speech and Debate Session" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-3 left-3 bg-brand-blue text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
+                            Weekly Session
+                        </div>
+                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-slate-800 text-[11px] font-semibold px-2.5 py-1 rounded-full">
+                            Wednesdays • 16:00
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center gap-2 text-xs text-brand-orange font-semibold mb-1">
+                                <span>Public Speaking</span> • <span>British Parliamentary</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-brand-navy hover:text-brand-blue transition-colors">
+                                English Debate & Speech Society
+                            </h3>
+                            <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                                Practice impromptu speeches, structured debate motions on global economy, and constructive rebuttals with supportive senior mentors.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span class="text-slate-500">📍 ULBI Amphitheater / Zoom</span>
+                            <button onclick="openActivityModal('debate')" class="font-semibold text-brand-blue hover:text-brand-blue-dark inline-flex items-center gap-1">
+                                Details <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Program 2: Logistics & Business Workshop -->
+                <div class="activity-card bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-card-hover transition-all duration-300 flex flex-col" data-category="business">
+                    <div class="relative h-48 overflow-hidden bg-slate-100">
+                        <img src="./images/activity-workshop.jpg" alt="Business Case & Logistics Workshop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-3 left-3 bg-brand-orange text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
+                            Bi-Weekly Masterclass
+                        </div>
+                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-slate-800 text-[11px] font-semibold px-2.5 py-1 rounded-full">
+                            Fridays • 14:00
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center gap-2 text-xs text-brand-blue font-semibold mb-1">
+                                <span>Supply Chain</span> • <span>International Business</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-brand-navy hover:text-brand-blue transition-colors">
+                                Global Logistics Case & Pitching
+                            </h3>
+                            <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                                Analyze real-world international trade cases, port operations, and pitch business strategy presentations entirely in professional English.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span class="text-slate-500">📍 Smart Classroom 302</span>
+                            <button onclick="openActivityModal('business')" class="font-semibold text-brand-blue hover:text-brand-blue-dark inline-flex items-center gap-1">
+                                Details <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Program 3: TOEFL & IELTS Prep -->
+                <div class="activity-card bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-card-hover transition-all duration-300 flex flex-col" data-category="prep">
+                    <div class="relative h-48 overflow-hidden bg-slate-100">
+                        <img src="./images/activity-gathering.jpg" alt="TOEFL and IELTS Preparation" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-3 left-3 bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
+                            Exam Clinic
+                        </div>
+                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-slate-800 text-[11px] font-semibold px-2.5 py-1 rounded-full">
+                            Saturdays • 09:30
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center gap-2 text-xs text-emerald-600 font-semibold mb-1">
+                                <span>TOEFL ITP</span> • <span>IELTS Band 7+</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-brand-navy hover:text-brand-blue transition-colors">
+                                TOEFL & IELTS Intensive Booster
+                            </h3>
+                            <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                                Diagnostic drills for listening comprehension, grammar structure, academic reading, and high-scoring IELTS speaking simulations.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span class="text-slate-500">📍 Language Lab & CBT</span>
+                            <button onclick="openActivityModal('toefl')" class="font-semibold text-brand-blue hover:text-brand-blue-dark inline-flex items-center gap-1">
+                                Details <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- UPCOMING EVENTS & CONFERENCES SECTION -->
+    <section id="events" class="py-20 bg-slate-50/80 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-orange bg-brand-orange-50 px-3 py-1 rounded-full border border-brand-orange/20">
+                    Upcoming Events
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-4 tracking-tight">
+                    Join Our Conferences & Competitions
+                </h2>
+                <div class="w-16 h-1 bg-brand-orange mx-auto mt-4 rounded-full"></div>
+                <p class="text-slate-600 text-base mt-4">
+                    Participate in national speech competitions, global trade seminars, and network with international guest lecturers and industry leaders.
+                </p>
+            </div>
+
+            <!-- Featured Large Event Card -->
+            <div class="bg-white rounded-3xl border border-slate-200/90 shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-12 mb-10">
+                <div class="lg:col-span-6 relative h-64 lg:h-auto min-h-[300px]">
+                    <img src="./images/event-summit.jpg" alt="ILBBEC International Summit" class="w-full h-full object-cover">
+                    <div class="absolute top-4 left-4 bg-brand-blue text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-md">
+                        Flagship Annual Event
+                    </div>
+                </div>
+                <div class="lg:col-span-6 p-8 sm:p-10 flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="flex items-center gap-3 text-xs font-semibold text-brand-orange">
+                            <span class="bg-brand-orange-50 px-2.5 py-1 rounded-md border border-brand-orange/20">October 15-16, 2026</span>
+                            <span>ULBI Grand Auditorium & Live Streaming</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-brand-navy mt-3 tracking-tight">
+                            ILBBEC National English & Logistics Pitch Cup 2026
+                        </h3>
+                        <p class="text-slate-600 text-sm mt-3 leading-relaxed">
+                            A nationwide university competition bringing together students from across Indonesia to present innovative solutions for green supply chains and sustainable international trade in English.
+                        </p>
+                        
+                        <!-- Event Highlights -->
+                        <div class="grid grid-cols-2 gap-3 mt-5 text-xs text-slate-700">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-brand-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>Total Prize IDR 25,000,000</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-brand-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>International Jury Panel</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-brand-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>National Certificate</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-brand-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>Logistics Industry Networking</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 pt-4 border-t border-slate-100">
+                        <button onclick="openRegisterEventModal('ILBBEC National English & Logistics Pitch Cup 2026')" class="px-6 py-3 rounded-xl bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold text-sm shadow-md transition-all">
+                            Register Delegate
+                        </button>
+                        <a href="#join" class="text-xs font-semibold text-slate-600 hover:text-brand-blue">
+                            Volunteer as Committee →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two Sub-Events Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Sub Event 1 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-slate-500 mb-2">
+                            <span class="font-bold text-brand-blue bg-blue-50 px-2 py-0.5 rounded">Webinar Series</span>
+                            <span>Sept 24, 2026 • 19:30 WIB</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-brand-navy">Global Logistics Career Talk: Stepping into Multinational Corporations</h4>
+                        <p class="text-xs text-slate-600 mt-2">
+                            Learn from ULBI alumni currently working at top global freight forwarders and tech supply chain firms on how English fluency accelerated their hiring.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
+                        <span class="text-slate-500">Platform: Zoom Meeting</span>
+                        <button onclick="openRegisterEventModal('Global Logistics Career Talk')" class="font-semibold text-brand-blue hover:text-brand-blue-dark">RSVP Free →</button>
+                    </div>
+                </div>
+
+                <!-- Sub Event 2 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-slate-500 mb-2">
+                            <span class="font-bold text-brand-orange bg-orange-50 px-2 py-0.5 rounded">Bootcamp</span>
+                            <span>Oct 03, 2026 • 09:00 WIB</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-brand-navy">English Public Speaking & Debate Masterclass for Beginners</h4>
+                        <p class="text-xs text-slate-600 mt-2">
+                            An intensive, friendly 1-day crash course covering vocal projection, anxiety control, storytelling structure, and persuasive argumentation.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
+                        <span class="text-slate-500">Location: ULBI Hall A</span>
+                        <button onclick="openRegisterEventModal('English Public Speaking Bootcamp')" class="font-semibold text-brand-orange hover:text-brand-orange-dark">Book Seat →</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- GALLERY SECTION (2-Column Mobile 390px, 3/4 Column Desktop + Lightbox) -->
+    <!-- ========================================================================= -->
+    <section id="gallery" class="py-20 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-50 px-3 py-1 rounded-full border border-brand-blue/20">
+                    Moments & Memories
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-4 tracking-tight">
+                    ILBBEC Campus Life in Pictures
+                </h2>
+                <div class="w-16 h-1 bg-brand-blue mx-auto mt-4 rounded-full"></div>
+                <p class="text-slate-600 text-base mt-4">
+                    Capturing student achievements, vibrant debate sessions, international conferences, and lifelong friendships.
+                </p>
+            </div>
+
+            <!-- Gallery Grid: 2-column on mobile (390px), 3/4-column on desktop -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+                
+                <!-- Gallery Item 1 -->
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 shadow-sm cursor-pointer aspect-square" onclick="openLightbox('./images/hero-students.jpg', 'Interactive Group Collaboration in University Lounge')">
+                    <img src="./images/hero-students.jpg" alt="Student Collaboration" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-brand-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 sm:p-4 text-white">
+                        <span class="text-[10px] text-brand-orange-light font-bold uppercase">Study Group</span>
+                        <p class="text-xs sm:text-sm font-semibold truncate">Collaborative English Learning</p>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 2 -->
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 shadow-sm cursor-pointer aspect-square" onclick="openLightbox('./images/activity-debate.jpg', 'National Speech & Debate Competition')">
+                    <img src="./images/activity-debate.jpg" alt="Debate Speech" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-brand-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 sm:p-4 text-white">
+                        <span class="text-[10px] text-brand-orange-light font-bold uppercase">Debate</span>
+                        <p class="text-xs sm:text-sm font-semibold truncate">Public Speaking Stage</p>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 3 -->
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 shadow-sm cursor-pointer aspect-square" onclick="openLightbox('./images/activity-workshop.jpg', 'Logistics Supply Chain Digital Presentation Workshop')">
+                    <img src="./images/activity-workshop.jpg" alt="Logistics Workshop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-brand-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 sm:p-4 text-white">
+                        <span class="text-[10px] text-brand-orange-light font-bold uppercase">Workshop</span>
+                        <p class="text-xs sm:text-sm font-semibold truncate">Global Logistics Case Prep</p>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 4 -->
+                <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 shadow-sm cursor-pointer aspect-square" onclick="openLightbox('./images/activity-gathering.jpg', 'Graduation & Award Celebration Ceremony')">
+                    <img src="./images/activity-gathering.jpg" alt="Awards and Community" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-brand-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 sm:p-4 text-white">
+                        <span class="text-[10px] text-brand-orange-light font-bold uppercase">Achievement</span>
+                        <p class="text-xs sm:text-sm font-semibold truncate">English Certificate Awards</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Lightbox Modal for Full-Size Gallery Photos -->
+    <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all duration-300" onclick="closeLightbox(event)">
+        <div class="relative max-w-4xl w-full bg-transparent rounded-2xl overflow-hidden" onclick="event.stopPropagation()">
+            <button onclick="closeLightboxDirect()" class="absolute top-3 right-3 text-white bg-black/60 hover:bg-black p-2 rounded-full z-10 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <img id="lightbox-img" src="" alt="Full view" class="w-full max-h-[80vh] object-contain rounded-xl">
+            <p id="lightbox-caption" class="text-center text-white text-sm font-medium mt-3 px-4"></p>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TESTIMONIALS & STUDENT VOICES SECTION -->
+    <!-- ========================================================================= -->
+    <section id="testimonials" class="py-20 bg-slate-50/70 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-orange bg-brand-orange-50 px-3 py-1 rounded-full border border-brand-orange/20">
+                    Member Stories
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-4 tracking-tight">
+                    Hear from Our Members & Alumni
+                </h2>
+                <div class="w-16 h-1 bg-brand-blue mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Testimonial Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex text-amber-400">
+                            ★★★★★
+                        </div>
+                        <p class="text-slate-600 text-sm italic leading-relaxed">
+                            "When I first entered ULBI, I was hesitant to speak English during presentations. ILBBEC gave me a safe, friendly space to practice weekly. Today, I'm comfortable pitching logistics ideas to multinational clients."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-6 border-t border-slate-100 mt-6">
+                        <div class="w-10 h-10 rounded-full bg-brand-blue text-white font-bold flex items-center justify-center text-sm">
+                            RA
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-brand-navy">Rafi Ardiansyah</div>
+                            <div class="text-xs text-slate-500">Logistics Management • Class of 2024</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex text-amber-400">
+                            ★★★★★
+                        </div>
+                        <p class="text-slate-600 text-sm italic leading-relaxed">
+                            "The TOEFL booster sessions and peer speaking drills were game changers! I achieved an IELTS band of 7.5 which helped me secure an international student exchange program."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-6 border-t border-slate-100 mt-6">
+                        <div class="w-10 h-10 rounded-full bg-brand-orange text-white font-bold flex items-center justify-center text-sm">
+                            SK
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-brand-navy">Sarah Kimberly</div>
+                            <div class="text-xs text-slate-500">International Business • Class of 2025</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex text-amber-400">
+                            ★★★★★
+                        </div>
+                        <p class="text-slate-600 text-sm italic leading-relaxed">
+                            "Being part of ILBBEC's debate team broadened my worldview. The critical thinking, quick rebuttal skills, and leadership experience were invaluable during my management trainee interviews."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-6 border-t border-slate-100 mt-6">
+                        <div class="w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm">
+                            FN
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-brand-navy">Farhan Naufal</div>
+                            <div class="text-xs text-slate-500">Supply Chain & E-Commerce • Class of 2023</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- JOIN US / MEMBERSHIP REGISTRATION SECTION (Working Interactive Form) -->
+    <!-- ========================================================================= -->
+    <section id="join" class="py-20 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Details & 3-Step Pathway -->
+                <div class="lg:col-span-5 space-y-6">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-orange bg-brand-orange-50 px-3 py-1 rounded-full border border-brand-orange/20">
+                        Join ILBBEC 2026
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy tracking-tight leading-tight">
+                        Start Your Global Journey with ULBI's English Activity Unit
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                        Open to all active students of <span class="font-semibold text-brand-navy">Universitas Logistik & Bisnis Internasional</span> across all majors, study programs, and English proficiency levels.
+                    </p>
+
+                    <!-- 3 Steps -->
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-full bg-brand-blue-50 text-brand-blue font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                                1
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-brand-navy">Fill out the Registration Form</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Complete your student data and select your preferred focus areas.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-full bg-brand-orange-50 text-brand-orange font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                                2
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-brand-navy">Friendly Placement & Chat</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">A casual, pressure-free conversational interview to match you with peers.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 font-bold flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                                3
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-brand-navy">Welcome Gathering & Onboarding</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Receive your membership kit, meet your mentor, and start learning!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-brand-blue-50/70 border border-brand-blue-100 text-xs text-brand-blue flex items-center gap-3">
+                        <svg class="w-5 h-5 flex-shrink-0 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Need assistance? Contact our recruitment officer at <strong>+62 812-3456-7890</strong> (WhatsApp).</span>
+                    </div>
+
+                </div>
+
+                <!-- Right: Interactive Registration Form Card -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xl p-6 sm:p-10 relative">
+                        <h3 class="text-xl font-bold text-brand-navy mb-1">Membership Application Form</h3>
+                        <p class="text-xs text-slate-500 mb-6">Batch 2026 • Universitas Logistik & Bisnis Internasional</p>
+
+                        <form id="membership-form" onsubmit="handleRegistration(event)" class="space-y-4">
+                            
+                            <!-- Full Name & NIM -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
+                                    <input type="text" name="fullname" required placeholder="e.g. Amanda Putri" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Student ID (NIM) *</label>
+                                    <input type="text" name="nim" required placeholder="e.g. 12120045" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
+                                </div>
+                            </div>
+
+                            <!-- Study Program & WhatsApp -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Major / Study Program *</label>
+                                    <select name="program" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue bg-white">
+                                        <option value="">Select your ULBI major</option>
+                                        <option value="D4 International Logistics Management">D4 International Logistics Management</option>
+                                        <option value="D4 E-Commerce Logistics">D4 E-Commerce Logistics</option>
+                                        <option value="S1 Business Administration">S1 Business Administration</option>
+                                        <option value="S1 Digital Supply Chain">S1 Digital Supply Chain</option>
+                                        <option value="S1 Informatics / IT">S1 Informatics / Information System</option>
+                                        <option value="Other ULBI Major">Other ULBI Major</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">WhatsApp Number *</label>
+                                    <input type="tel" name="whatsapp" required placeholder="e.g. 08123456789" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
+                                </div>
+                            </div>
+
+                            <!-- Current English Comfort Level -->
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Current English Comfort Level</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 text-xs cursor-pointer hover:bg-slate-50 has-[:checked]:border-brand-blue has-[:checked]:bg-brand-blue-50">
+                                        <input type="radio" name="level" value="Beginner" checked class="text-brand-blue">
+                                        <span>Beginner</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 text-xs cursor-pointer hover:bg-slate-50 has-[:checked]:border-brand-blue has-[:checked]:bg-brand-blue-50">
+                                        <input type="radio" name="level" value="Intermediate" class="text-brand-blue">
+                                        <span>Intermediate</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 text-xs cursor-pointer hover:bg-slate-50 has-[:checked]:border-brand-blue has-[:checked]:bg-brand-blue-50">
+                                        <input type="radio" name="level" value="Advanced" class="text-brand-blue">
+                                        <span>Advanced</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Primary Interest Checkboxes -->
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Primary Interest in ILBBEC (Select any)</label>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" name="interest[]" value="Public Speaking & Debate" checked class="rounded text-brand-blue">
+                                        <span>Public Speaking & Debate</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" name="interest[]" value="Logistics Business English" checked class="rounded text-brand-blue">
+                                        <span>Logistics Business English</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" name="interest[]" value="TOEFL & IELTS Prep" class="rounded text-brand-blue">
+                                        <span>TOEFL & IELTS Prep</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" name="interest[]" value="Event Committee & Leadership" class="rounded text-brand-blue">
+                                        <span>Event Committee & Leadership</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="pt-3">
+                                <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold text-sm shadow-lg shadow-brand-blue/20 hover:shadow-glow transition-all duration-300 flex items-center justify-center gap-2">
+                                    <span>Submit Application</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </button>
+                                <p class="text-[11px] text-slate-400 text-center mt-2">
+                                    By submitting, you agree to receive official ILBBEC orientation info via WhatsApp/Email.
+                                </p>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- FREQUENTLY ASKED QUESTIONS (Interactive Accordion) -->
+    <!-- ========================================================================= -->
+    <section id="faq" class="py-20 bg-slate-50/80 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-14">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-50 px-3 py-1 rounded-full border border-brand-blue/20">
+                    Got Questions?
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-4 tracking-tight">
+                    Frequently Asked Questions
+                </h2>
+                <div class="w-16 h-1 bg-brand-blue mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Accordion Items -->
+            <div class="space-y-4">
+                
+                <!-- FAQ 1 -->
+                <div class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm">
+                    <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-brand-navy hover:text-brand-blue transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-base sm:text-lg">Do I need to be fluent in English to join ILBBEC?</span>
+                        <svg class="faq-icon w-5 h-5 text-slate-400 transition-transform duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-answer px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                        Not at all! ILBBEC is designed as an inclusive learning environment for everyone, from hesitant beginners to seasoned debaters. We have dedicated peer mentorship tracks to help you build confidence without judgment.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm">
+                    <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-brand-navy hover:text-brand-blue transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-base sm:text-lg">Which ULBI study programs can join ILBBEC?</span>
+                        <svg class="faq-icon w-5 h-5 text-slate-400 transition-transform duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-answer px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                        All active students across all faculties (Logistics Management, Supply Chain, Business Administration, Informatics, Accounting, etc.) and all cohorts (Diploma, Bachelor) are warmly welcomed to join!
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm">
+                    <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-brand-navy hover:text-brand-blue transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-base sm:text-lg">Are sessions held in-person or online?</span>
+                        <svg class="faq-icon w-5 h-5 text-slate-400 transition-transform duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-answer px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                        We operate on a hybrid model. Core weekly speaking clubs and debate sparring are held at the ULBI Campus amphitheater/smart classrooms, while guest webinars and international study series are streamed on Zoom for maximum flexibility.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm">
+                    <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-brand-navy hover:text-brand-blue transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-base sm:text-lg">What are the benefits of obtaining ILBBEC membership?</span>
+                        <svg class="faq-icon w-5 h-5 text-slate-400 transition-transform duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-answer px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                        Members receive official SKP points, certificates of active membership, free TOEFL simulation test vouchers, access to national speech & debate competitions under ULBI delegation, and networking opportunities with international logistics practitioners.
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- FOOTER -->
+    <!-- ========================================================================= -->
+    <footer class="bg-brand-navy text-slate-300 pt-16 pb-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
+                
+                <!-- Col 1: Brand & Logo -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-white p-1 flex items-center justify-center">
+                            <img src="./images/logo.png" alt="ILBBEC Logo" class="w-full h-full object-contain">
+                        </div>
+                        <div>
+                            <span class="text-xl font-extrabold text-white tracking-tight">ILBBEC</span>
+                            <span class="text-xs text-brand-orange block font-semibold">Universitas Logistik & Bisnis Internasional</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
+                        International Logistics & Business Baccalaureate English Center — empowering the next generation of global logistics executives, international trade diplomats, and fluent English communicators at ULBI.
+                    </p>
+                    <div class="flex items-center space-x-3 pt-2">
+                        <!-- Instagram -->
+                        <a href="https://instagram.com" target="_blank" rel="noopener" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-brand-blue flex items-center justify-center text-white transition-colors" aria-label="Instagram">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <!-- LinkedIn -->
+                        <a href="https://linkedin.com" target="_blank" rel="noopener" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-brand-blue flex items-center justify-center text-white transition-colors" aria-label="LinkedIn">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                        <!-- YouTube -->
+                        <a href="https://youtube.com" target="_blank" rel="noopener" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-brand-blue flex items-center justify-center text-white transition-colors" aria-label="YouTube">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Quick Links -->
+                <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Navigation</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#about" class="hover:text-white transition-colors">About ILBBEC</a></li>
+                        <li><a href="#activities" class="hover:text-white transition-colors">Flagship Activities</a></li>
+                        <li><a href="#events" class="hover:text-white transition-colors">Upcoming Events</a></li>
+                        <li><a href="#gallery" class="hover:text-white transition-colors">Photo Gallery</a></li>
+                        <li><a href="#faq" class="hover:text-white transition-colors">Membership FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Programs -->
+                <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Focus Programs</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#activities" class="hover:text-white transition-colors">English Speaking Society</a></li>
+                        <li><a href="#activities" class="hover:text-white transition-colors">Logistics Business English</a></li>
+                        <li><a href="#activities" class="hover:text-white transition-colors">TOEFL & IELTS Clinic</a></li>
+                        <li><a href="#activities" class="hover:text-white transition-colors">Parliamentary Debate</a></li>
+                        <li><a href="#activities" class="hover:text-white transition-colors">Global Youth Summit</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Campus Address -->
+                <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Secretariat</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        <strong>Universitas Logistik & Bisnis Internasional (ULBI)</strong><br>
+                        Gedung Student Center Lt. 2<br>
+                        Jl. Sari Asih No.54, Sarijadi, Kec. Sukasari, Kota Bandung, Jawa Barat 40151
+                    </p>
+                    <p class="text-xs text-slate-400 mt-2">
+                        Email: <a href="mailto:ilbbec@ulbi.ac.id" class="text-brand-orange hover:underline">ilbbec@ulbi.ac.id</a>
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Bottom Copyright & Credit -->
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+                <p>© 2026 ILBBEC ULBI. All rights reserved.</p>
+                <div class="flex items-center space-x-4">
+                    <span>Designed for ULBI International Community</span>
+                    <a href="#home" class="text-brand-blue-light hover:text-white">Back to top ↑</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================================================= -->
+    <!-- INTERACTIVE MODALS & TOAST NOTIFICATIONS -->
+    <!-- ========================================================================= -->
+    
+    <!-- Success Registration Toast Modal -->
+    <div id="success-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl space-y-4 animate-scaleUp">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+                ✓
+            </div>
+            <h3 class="text-2xl font-extrabold text-brand-navy">Registration Received!</h3>
+            <p class="text-sm text-slate-600 leading-relaxed" id="success-modal-msg">
+                Thank you for applying to ILBBEC ULBI. Our recruitment coordinator will reach out to your WhatsApp shortly with orientation details!
+            </p>
+            <button onclick="closeSuccessModal()" class="w-full py-3 bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold rounded-xl text-sm transition-colors shadow">
+                Awesome, Got it!
+            </button>
+        </div>
+    </div>
+
+    <!-- Event Registration Modal -->
+    <div id="event-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-7 max-w-md w-full shadow-2xl space-y-4" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-lg font-bold text-brand-navy">Event Registration</h3>
+                <button onclick="closeEventModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+            <p class="text-xs text-brand-blue font-semibold" id="event-modal-title"></p>
+            <form onsubmit="handleEventSubmit(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Full Name</label>
+                    <input type="text" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">NIM / University</label>
+                    <input type="text" required placeholder="ULBI or other university" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">WhatsApp Number</label>
+                    <input type="tel" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-brand-blue text-white font-semibold rounded-xl text-xs hover:bg-brand-blue-dark transition-colors mt-2">
+                    Confirm RSVP
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Activity Detail Modal -->
+    <div id="activity-detail-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-7 max-w-lg w-full shadow-2xl space-y-4" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-lg font-bold text-brand-navy" id="activity-detail-title">Program Details</h3>
+                <button onclick="closeActivityModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+            <div class="text-xs text-slate-600 leading-relaxed space-y-3" id="activity-detail-body">
+                <!-- Injected via JS -->
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+                <button onclick="closeActivityModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Close</button>
+                <a href="#join" onclick="closeActivityModal()" class="px-4 py-2 text-xs font-semibold bg-brand-blue text-white rounded-lg hover:bg-brand-blue-dark">Join This Track</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <!-- ========================================================================= -->
+    <script>
+        // 1. Mobile Hamburger Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            const isExpanded = mobileMenu.classList.toggle('hidden');
+            if (!isExpanded) {
+                hamburgerIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            } else {
+                hamburgerIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
+        });
+
+        // Close mobile drawer upon link click
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                hamburgerIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            });
+        });
+
+        // 2. Activity Filtering Tabs
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const activityCards = document.querySelectorAll('.activity-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active tab styles
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-brand-blue', 'text-white');
+                    b.classList.add('bg-slate-100', 'text-slate-700');
+                });
+                btn.classList.add('active', 'bg-brand-blue', 'text-white');
+                btn.classList.remove('bg-slate-100', 'text-slate-700');
+
+                const category = btn.getAttribute('data-category');
+
+                activityCards.forEach(card => {
+                    if (category === 'all' || card.getAttribute('data-category') === category) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 3. FAQ Accordion Toggle
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('.faq-icon');
+            const isOpen = answer.classList.contains('open');
+
+            // Close all other FAQs
+            document.querySelectorAll('.faq-answer').forEach(el => el.classList.remove('open'));
+            document.querySelectorAll('.faq-icon').forEach(el => el.classList.remove('rotate-180'));
+
+            if (!isOpen) {
+                answer.classList.add('open');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // 4. Lightbox for Photo Gallery
+        function openLightbox(src, caption) {
+            const modal = document.getElementById('lightbox-modal');
+            const img = document.getElementById('lightbox-img');
+            const cap = document.getElementById('lightbox-caption');
+            img.src = src;
+            cap.innerText = caption;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(event) {
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeLightboxDirect() {
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 5. Membership Form Submission Handler
+        function handleRegistration(e) {
+            e.preventDefault();
+            const form = e.target;
+            const fullname = form.fullname.value;
+            const modalMsg = document.getElementById('success-modal-msg');
+            modalMsg.innerText = `Welcome, ${fullname}! Your ILBBEC membership application has been logged. We will contact you via WhatsApp regarding the upcoming orientation schedule.`;
+            
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('success-modal').classList.add('flex');
+            form.reset();
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+            document.getElementById('success-modal').classList.remove('flex');
+        }
+
+        // 6. Event RSVP Modal
+        function openRegisterEventModal(title) {
+            document.getElementById('event-modal-title').innerText = title;
+            document.getElementById('event-modal').classList.remove('hidden');
+            document.getElementById('event-modal').classList.add('flex');
+        }
+
+        function closeEventModal() {
+            document.getElementById('event-modal').classList.add('hidden');
+            document.getElementById('event-modal').classList.remove('flex');
+        }
+
+        function handleEventSubmit(e) {
+            e.preventDefault();
+            closeEventModal();
+            const modalMsg = document.getElementById('success-modal-msg');
+            modalMsg.innerText = `You have successfully RSVP'd for the event! The access link and ticket have been emailed to you.`;
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('success-modal').classList.add('flex');
+        }
+
+        // 7. Activity Detail Modal
+        const activityDetailsData = {
+            debate: {
+                title: 'English Debate & Speech Society',
+                content: `
+                    <p><strong>Schedule:</strong> Every Wednesday at 16:00 - 18:00 WIB</p>
+                    <p><strong>Venue:</strong> ULBI Campus Amphitheater & Hybrid Online</p>
+                    <p><strong>Format:</strong> British Parliamentary (BP), Asian Parliamentary (AP), and 3-Minute Impromptu Pitch.</p>
+                    <p><strong>Curriculum:</strong> Motion analysis, rebuttal logic, rhetorical delivery, argumentation frameworks on international trade and current affairs.</p>
+                    <p><strong>Prerequisites:</strong> None! All English levels are coached by senior champions.</p>
+                `
+            },
+            business: {
+                title: 'Global Logistics Case & Pitching Masterclass',
+                content: `
+                    <p><strong>Schedule:</strong> Bi-Weekly on Fridays at 14:00 - 16:30 WIB</p>
+                    <p><strong>Venue:</strong> Smart Classroom 302</p>
+                    <p><strong>Format:</strong> International business case analysis, supply chain simulation, slide design & executive pitch.</p>
+                    <p><strong>Topics:</strong> Multimodal transport agreements, port congestion strategies, green supply chains, and Incoterms in English.</p>
+                `
+            },
+            toefl: {
+                title: 'TOEFL & IELTS Intensive Score Booster',
+                content: `
+                    <p><strong>Schedule:</strong> Every Saturday at 09:30 - 12:00 WIB</p>
+                    <p><strong>Venue:</strong> Language Center Computer Lab</p>
+                    <p><strong>Format:</strong> Diagnostic practice tests, listening tricks, reading speed strategies, and 1-on-1 IELTS speaking assessment.</p>
+                    <p><strong>Target:</strong> TOEFL ITP 550+ / IELTS Band 7.0+ for graduate studies and international career recruitment.</p>
+                `
+            }
+        };
+
+        function openActivityModal(key) {
+            const data = activityDetailsData[key];
+            if (data) {
+                document.getElementById('activity-detail-title').innerText = data.title;
+                document.getElementById('activity-detail-body').innerHTML = data.content;
+                document.getElementById('activity-detail-modal').classList.remove('hidden');
+                document.getElementById('activity-detail-modal').classList.add('flex');
+            }
+        }
+
+        function closeActivityModal() {
+            document.getElementById('activity-detail-modal').classList.add('hidden');
+            document.getElementById('activity-detail-modal').classList.remove('flex');
+        }
+
+        // 8. Navbar Scroll State & Active Section Highlighting
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 30) {
+                nav.classList.add('shadow-sm', 'bg-white/95');
+            } else {
+                nav.classList.remove('shadow-sm');
+            }
+
+            // Update active nav link
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPos = window.scrollY + 100;
+
+            sections.forEach(sec => {
+                const top = sec.offsetTop;
+                const height = sec.offsetHeight;
+                const id = sec.getAttribute('id');
+                const link = document.querySelector(`.nav-link[href="#${id}"]`);
+
+                if (scrollPos >= top && scrollPos < top + height) {
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    if (link) link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
