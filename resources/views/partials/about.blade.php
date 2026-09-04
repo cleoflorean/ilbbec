@@ -74,9 +74,6 @@
                 </p>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ request()->is('/') ? '#activities' : route('home') . '#activities' }}" class="px-5 py-3 rounded-xl bg-white text-brand-blue font-semibold text-sm hover:bg-blue-50 transition-colors shadow-md">
-                    Discover Programs
-                </a>
                 <a href="{{ route('register') }}" class="px-5 py-3 rounded-xl bg-brand-orange text-white font-semibold text-sm hover:bg-brand-orange-dark transition-colors shadow-md">
                     Register Now
                 </a>

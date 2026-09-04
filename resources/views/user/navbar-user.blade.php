@@ -20,9 +20,13 @@
 
             <!-- Desktop Navigation Menu -->
             <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
-                <a href="{{ request()->is('/') ? '#home' : route('home') . '#home' }}" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Home</a>
-                <a href="{{ request()->is('/') ? '#about' : route('home') . '#about' }}" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Information</a>
-                <a href="{{ request()->is('/') ? '#activities' : route('home') . '#activities' }}" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Profile</a>
+                <a href="/user" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Home</a>
+                <a href="" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Information</a>
+                <a href="/profile" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Profile</a>
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Logout</button>
+                </form>
                 {{-- <a href="{{ request()->is('/') ? '#events' : route('home') . '#events' }}" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Events</a>
                 <a href="{{ request()->is('/') ? '#gallery' : route('home') . '#gallery' }}" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Gallery</a>
                 <a href="{{ request()->is('/') ? '#testimonials' : route('home') . '#testimonials' }}" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-lg transition-colors">Voices</a>

@@ -12,9 +12,9 @@ class Pendaftaran extends Model
         'UserId', 'Divisi', 'BerkasCV', 'Portofolio', 'StatusBerkas', 'StatusAkhir'
     ];
 
-    public function users()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'UsersId', 'UsersId');
+        return $this->belongsTo(User::class, 'UserId', 'UserId');
     }
     
     public function study_case()

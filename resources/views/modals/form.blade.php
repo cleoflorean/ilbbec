@@ -5,34 +5,51 @@
             <button type="button" data-modal-close="pendaftaran-modal" class="rounded-lg p-2 text-2xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-700" aria-label="Tutup form pendaftaran">&times;</button>
         </div>
         <div class="p-5">
-            <form id="pendaftaran-form" action="" method="POST" enctype="multipart/form-data">
-                            @csrf
+            <form id="pendaftaran-form" action="{{ route('pendaftaran.create') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="text" name="UserId" value="{{Auth::id()}}">
+                    <div class="mb-3">
+                            <label for="pendaftaran-nama" class="mb-1 block text-sm font-medium text-slate-700">Nama</label>
+                            {{-- Atribut 'disabled' ditambahkan & 'name' dihapus agar TIDAK TERKIRIM saat POST --}}
+                            <input 
+                                id="pendaftaran-nama" 
+                                type="text" 
+                                value="{{ Auth::user()->name ?? $user->Nama }}" 
+                                class="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-slate-500 cursor-not-allowed" 
+                                disabled
+                            >
+                            <small class="text-xs text-slate-400">*Nama terisi otomatis berdasarkan akun Anda</small>
+                    </div>                                                  
                             <div class="mb-3">
-                                <label for="pendaftaran-nama" class="mb-1 block text-sm font-medium text-slate-700">Nama</label>
-                                <input id="pendaftaran-nama" type="text" name="Nama" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
-                            </div>                                                  
-                            <div class="mb-3">
-                                <label for="pendaftaran-nip" class="mb-1 block text-sm font-medium text-slate-700">NIK</label>
-                                <input id="pendaftaran-nip" type="text" name="Nip" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
+                                <label for="pendaftaran-nip" class="mb-1 block text-sm font-medium text-slate-700">NPM</label>
+                                <input 
+                                    id="pendaftaran-npm" 
+                                    type="text" 
+                                    value="{{ Auth::user()->name ?? $user->Npm }}" 
+                                    class="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-slate-500 cursor-not-allowed" 
+                                    disabled
+                                >
                             </div>
                             <div class="mb-3">
-                                <label for="pendaftaran-role" class="mb-1 block text-sm font-medium text-slate-700">Jabatan</label>
-                                <select name="Role" id="pendaftaran-role" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
-                                    <option value="Operator">Operator</option>
-                                    <option value="Pengawas">Pengawas</option>
-                                    <option value="OB">OB</option>
-                                    <option value="Security">Security</option>
+                                <label for="pendaftaran-role" class="mb-1 block text-sm font-medium text-slate-700">Divisi</label>
+                                <select name="Divisi" id="pendaftaran-role" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
+                                    <option value="Bendahara">Bendahara</option>
+                                    <option value="Sekretaris">Sekretaris</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Public Relation">Public Relation</option>
+                                    <option value="Curiculum">Curiculum</option>
+                                    <option value="Media & Information">Media & Information</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                                 <div class="mb-3">
                                     <label for="pendaftaran-cv" class="mb-1 block text-sm font-medium text-slate-700">Upload CV (PDF)</label>
-                                    <input type="file" name="Cv" id="pendaftaran-cv" class="w-full rounded-lg border border-slate-300 px-3 py-2" accept="application/pdf">
+                                    <input type="file" name="BerkasCV" id="pendaftaran-cv" class="w-full rounded-lg border border-slate-300 px-3 py-2" accept="application/pdf" required>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="pendaftaran-file-pribadi" class="mb-1 block text-sm font-medium text-slate-700">File Pribadi (PDF)</label>
-                                    <input type="file" name="FilePribadi" id="pendaftaran-file-pribadi" class="w-full rounded-lg border border-slate-300 px-3 py-2" accept="application/pdf">
+                                 <div class="mb-3">
+                                    <label for="pendaftaran-portofolio" class="mb-1 block text-sm font-medium text-slate-700">Upload Portofolio Opsional (PDF)</label>
+                                    <input type="file" name="Portofolio" id="pendaftaran-portofolio" class="w-full rounded-lg border border-slate-300 px-3 py-2" accept="application/pdf">
                                 </div>
-                                <input type="hidden" name="Status" value="Aktif">
+                                {{-- <input type="hidden" name="Status" value="Aktif"> --}}
                             <button type="submit" class="rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white hover:bg-blue-800">Kirim Pendaftaran</button>
             </form>
         </div>

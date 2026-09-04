@@ -21,10 +21,10 @@
             
             <!-- Gallery Item 1 -->
             <div class="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 shadow-sm cursor-pointer aspect-square" onclick="openLightbox('{{ asset('images/hero-students.jpg') }}', 'Interactive Group Collaboration in University Lounge')">
-                <img src="{{ asset('images/hero-students.jpg') }}" alt="Student Collaboration" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                <img src="{{ asset('images/hutilbek.jpg') }}" alt="Student Collaboration" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                 <div class="absolute inset-0 bg-brand-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 sm:p-4 text-white">
-                    <span class="text-[10px] text-brand-orange-light font-bold uppercase">Study Group</span>
-                    <p class="text-xs sm:text-sm font-semibold truncate">Collaborative English Learning</p>
+                    <span class="text-[10px] text-brand-orange-light font-bold uppercase">Annibersary ILBBEC</span>
+                    <p class="text-xs sm:text-sm font-semibold truncate">Celebration Event</p>
                 </div>
             </div>
 

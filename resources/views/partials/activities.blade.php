@@ -15,22 +15,6 @@
                     Structured, engaging activities designed to develop speaking agility, critical thinking, business pitching, and exam readiness.
                 </p>
             </div>
-            
-            <!-- Category Filter Buttons -->
-            <div class="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 mt-6 md:mt-0 max-w-full">
-                <button class="filter-btn active px-4 py-2 text-xs font-semibold rounded-xl bg-brand-blue text-white shadow-sm transition-all" data-category="all">
-                    All
-                </button>
-                <button class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all" data-category="speaking">
-                    Speaking & Debate
-                </button>
-                <button class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all" data-category="business">
-                    Logistics & Business
-                </button>
-                <button class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all" data-category="prep">
-                    TOEFL/IELTS Prep
-                </button>
-            </div>
         </div>
 
         <!-- Activities Cards Grid -->

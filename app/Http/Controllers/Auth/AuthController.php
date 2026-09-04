@@ -45,7 +45,7 @@ class AuthController extends Controller
             'TempatLahir'  => $request->TempatLahir,
             'TanggalLahir' => $request->TanggalLahir,
             'NoTlp'        => $request->NoTlp,
-            'Email'        => $request->Email,
+            'Email'        => strtolower($request->string('Email')->trim()->toString()),
             'Password'     => Hash::make($request->Password),
             'Angkatan'     => $request->Angkatan,
             'Role'         => 'user',
@@ -57,6 +57,10 @@ class AuthController extends Controller
     // ── Tampilkan form login ───────────────────────────────────────────────────
     public function showLogin()
     {
+        if (Auth::check()) {
+            return $this->redirectByRole(Auth::user());
+        }
+
         return view('auth.login');
     }
 
@@ -68,18 +72,36 @@ class AuthController extends Controller
             'Password' => 'required|string',
         ]);
 
-        $user = User::where('Email', $request->Email)->first();
+        $credentials = [
+            'Email' => strtolower($request->string('Email')->trim()->toString()),
+            'password' => $request->string('Password')->toString(),
+        ];
 
-        if (!$user || !Hash::check($request->Password, $user->Password)) {
+        if (!Auth::attempt($credentials)) {
             return back()->withErrors([
                 'Email' => 'Email atau password salah.',
-            ])->withInput($request->only('Email'));
+            ])->onlyInput('Email');
         }
 
-        Auth::login($user);
         $request->session()->regenerate();
+        $user = Auth::user();
 
-        return redirect()->route('home')->with('success', 'Selamat datang, ' . $user->Nama . '!');
+        return $this->redirectByRole($user)->with('success', 'Selamat datang, ' . $user->Nama . '!');
+    }
+
+    private function redirectByRole(User $user)
+    {
+        return match (strtolower((string) $user->Role)) {
+            'admin' => redirect()->route('admin.home'),
+            'user' => redirect()->route('user.home'),
+            default => $this->rejectInvalidRole(),
+        };
+    }
+
+    private function rejectInvalidRole(): never
+    {
+        Auth::logout();
+        abort(403, 'Role pengguna tidak valid.');
     }
 
     // ── Logout ────────────────────────────────────────────────────────────────
