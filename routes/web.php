@@ -28,6 +28,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user', [UserController::class, 'index'])->name('user.home');
     Route::post('/pendaftaran', [PendaftaranController::class, 'CreatePendaftaran'])->name('pendaftaran.create');
     Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

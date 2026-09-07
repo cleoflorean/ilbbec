@@ -11,33 +11,32 @@
         <!-- Avatar / Foto Profil -->
         <div class="relative">
           <img 
-           
             alt="Foto Profil" 
             class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-blue-50 shadow-md"
           />
         </div>
 
         <!-- Informasi Utama & Tombol Aksi -->
-        <div class="flex-1 text-center sm:text-left space-y-3">
+        <div x-data="{ openEditModal: false }" class="flex-1 text-center sm:text-left space-y-3">
           <div>
             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
-              <h1 class="text-2xl font-bold text-slate-800">Sule</h1>
+              <h1 class="text-2xl font-bold text-slate-800">{{ $user->Nama }}</h1>
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
                 Mahasiswa Aktif
               </span>
             </div>
-            <p class="text-slate-500 font-medium">NPM: 1111111</p>
+            <p class="text-slate-500 font-medium">NPM: {{ $user->Npm }}</p>
           </div>
 
           <!-- Tombol Aksi -->
           <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-2">
-            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition shadow-sm">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 210.3H3v-3.572L16.732 3.732z"></path></svg>
+            <button @click="openEditModal = true" type="button" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor"p viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 210.3H3v-3.572L16.732 3.732z"></path></svg>
               Edit Profil
             </button>
           </div>
         </div>
-
+        @include('modals.edit-profile')
       </div>
     </div>
 
@@ -54,19 +53,15 @@
         <div class="space-y-3 text-sm">
           <div class="flex justify-between items-center py-1">
             <span class="text-slate-500">Email</span>
-            <span class="font-medium text-slate-800">sarah.azzahra@example.com</span>
+            <span class="font-medium text-slate-800">{{ $user->Email }}</span>
           </div>
           <div class="flex justify-between items-center py-1 border-t border-slate-50">
             <span class="text-slate-500">Nomor HP / WhatsApp</span>
-            <span class="font-medium text-slate-800">+62 812-3456-7890</span>
-          </div>
-          <div class="flex justify-between items-center py-1 border-t border-slate-50">
-            <span class="text-slate-500">Jenis Kelamin</span>
-            <span class="font-medium text-slate-800">Perempuan</span>
+            <span class="font-medium text-slate-800">{{ $user->NoTlp }}</span>
           </div>
           <div class="flex justify-between items-center py-1 border-t border-slate-50">
             <span class="text-slate-500">Tanggal Lahir</span>
-            <span class="font-medium text-slate-800">14 Maret 2003</span>
+            <span class="font-medium text-slate-800">{{ $user->TanggalLahir->format('d F Y') }}</span>
           </div>
         </div>
       </div>
@@ -79,25 +74,19 @@
         </h2>
 
         <div class="space-y-3 text-sm">
-          <div class="flex justify-between items-center py-1">
-            <span class="text-slate-500">Fakultas</span>
-            <span class="font-medium text-slate-800">Ilmu Komputer</span>
-          </div>
           <div class="flex justify-between items-center py-1 border-t border-slate-50">
             <span class="text-slate-500">Program Studi</span>
-            <span class="font-medium text-slate-800">Teknik Informatika</span>
+            <span class="font-medium text-slate-800">{{ $user->prodi->NamaProdi ?? '-' }}</span>
           </div>
           <div class="flex justify-between items-center py-1 border-t border-slate-50">
             <span class="text-slate-500">Divisi Pilihan</span>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700">
-              Public Relation
-            </span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700">{{ $pendaftaran->Divisi ?? '-' }}</span>
           </div>
           <div class="flex justify-between items-center py-1 border-t border-slate-50">
-            <span class="text-slate-500">Status Berkas CV</span>
-            <span class="text-xs font-semibold text-emerald-600 flex items-center gap-1">
+            <span class="text-slate-500">Tahap Rekrutmen</span>
+            <span class="text-xs font-semibold text-emerald-600 flex   items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-              Terverifikasi
+                {{ $tahapAktif['nama'] }}
             </span>
           </div>
         </div>

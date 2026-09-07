@@ -84,6 +84,8 @@
                                    {{ $errors->has('ProdiId') ? 'border-red-400 bg-red-50' : 'border-slate-200 bg-white' }}
                                    focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
                         <option value="">-- Pilih Program Studi --</option>
+                        <option value="">-- S1 Sains Data --</option>
+                        <option value="">-- D4 Teknik Informatika --</option>
                         @foreach($prodis as $prodi)
                             <option value="{{ $prodi->ProdiId }}" {{ old('ProdiId') == $prodi->ProdiId ? 'selected' : '' }}>
                                 {{ $prodi->NamaProdi }}
