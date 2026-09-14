@@ -15,7 +15,6 @@ return new class extends Migration
             $table->increments('WawancaraId');
             $table->unsignedInteger('PendaftaranId');
             $table->unsignedInteger('SesiId')->nullable();
-            $table->dateTime('Jadwal')->nullable();
             $table->string('Lokasi', 10)->nullable();
             $table->integer('NilaiWawancara')->nullable();
             $table->text('Catatan')->nullable();

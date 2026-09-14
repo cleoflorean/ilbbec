@@ -3,208 +3,435 @@
 @section('content')
 
     @php
-    // Data Dummy untuk Timeline Seleksi
-        $stages = [
-            [
-                'title' => 'Pendaftaran Berkas',
-                'date' => '10 Okt 2026',
-                'time' => '23:59 WIB',
-                'location' => 'Online (Website)',
-                'status' => 'Belum Dimulai',
-                'status_color' => 'bg-slate-200 text-slate-600'
-            ],
-            [
-                'title' => 'Study Case',
-                'date' => '15 Okt 2026',
-                'time' => '09:00 - 11:30 WIB',
-                'location' => 'Ruang 402, Gd. Rektorat',
-                'status' => 'Belum Dimulai',
-                'status_color' => 'bg-slate-200 text-slate-600'
-            ],
-            [
-                'title' => 'Wawancara',
-                'date' => '20 Okt 2026',
-                'time' => '13:00 - 15:00 WIB',
-                'location' => 'Ruang Rapat UKM',
-                'status' => 'Belum Dimulai',
-                'status_color' => 'bg-slate-200 text-slate-600'
-            ],
-            [
-                'title' => 'Pengumuman',
-                'date' => '25 Okt 2026',
-                'time' => '12:00 WIB',
-                'location' => 'Dashboard ILBBEC',
-                'status' => 'Belum Dimulai',
-                'status_color' => 'bg-slate-200 text-slate-600'
-            ]
-        ];
+        $sekarang = \Carbon\Carbon::now();
+
+        // 1. Relasi & Data Pendaftaran
+        $tglPendaftaran = $pendaftaran ? $pendaftaran->created_at : null;
+        $hasPendaftaran = !is_null($pendaftaran);
+
+        $studyCase = optional($pendaftaran)->study_case;
+        $jadwalSC = optional($studyCase)->jadwal_sesi;
+
+        $wawancara = optional($pendaftaran)->wawancara;
+        $jadwalWwn = optional($wawancara)->jadwal_sesi;
+
+        // 2. Parse Tanggal Langsung dari Database
+        $tglSC = ($jadwalSC && $jadwalSC->TanggalSesi) ? \Carbon\Carbon::parse($jadwalSC->TanggalSesi) : null;
+        $tglWwn = ($jadwalWwn && $jadwalWwn->TanggalSesi) ? \Carbon\Carbon::parse($jadwalWwn->TanggalSesi) : null;
+
+        // 3. Logika Kondisional H-3 & Keaktifan Sesi
+        $bukaSC = $tglSC && $sekarang->copy()->addDays(5)->greaterThanOrEqualTo($tglSC);
+        $aktifSC = $tglSC && $sekarang->greaterThanOrEqualTo($tglSC);
+
+        $bukaWwn = $tglWwn && $sekarang->copy()->addDays(5)->greaterThanOrEqualTo($tglWwn);
+        $aktifWwn = $tglWwn && $sekarang->greaterThanOrEqualTo($tglWwn);
+
+        // 4. Status Penyelesaian Tiap Tahap
+        $selesaiBerkas = $hasPendaftaran;
+        $selesaiSC = $studyCase && (!is_null($studyCase->NilaiKasus) || in_array($studyCase->StatusKasus, ['Selesai', 'Lolos']));
+        $selesaiWwn = $wawancara && (!is_null($wawancara->NilaiWawancara) || in_array($wawancara->StatusWawancara, ['Selesai', 'Lolos']));
+        $selesaiPengumuman = $pendaftaran && !is_null($pendaftaran->StatusAkhir) && $pendaftaran->StatusAkhir !== 'Menunggu';
+        $aktifPengumuman = $pendaftaran && !is_null($pendaftaran->StatusAkhir);
+
+        // Hitung Progres Garis Horizontal Timeline (0% s/d 75%)
+        if ($selesaiPengumuman) {
+            $progressWidth = '75%';
+        } elseif ($selesaiWwn || $aktifWwn) {
+            $progressWidth = '50%';
+        } elseif ($selesaiSC || $aktifSC) {
+            $progressWidth = '25%';
+        } elseif ($selesaiBerkas) {
+            $progressWidth = '12.5%';
+        } else {
+            $progressWidth = '0%';
+        }
     @endphp
 
     <!-- KONTEN UTAMA (Dashboard Timeline) -->
-    <main class="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 pt-12 md:pt-16">
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 md:pt-14 pb-24 md:pb-16">
         
+        <!-- Flash Alert Messages -->
+        @if (session('success'))
+            <div class="mb-8 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/90 px-5 py-4 text-sm text-emerald-800 shadow-sm">
+                <svg class="h-5 w-5 shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="font-medium">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="mb-8 flex items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50/90 px-5 py-4 text-sm text-rose-800 shadow-sm">
+                <svg class="h-5 w-5 shrink-0 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="font-medium">{{ session('error') }}</span>
+            </div>
+        @endif
+
         <!-- Header / Greeting -->
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-ilbbec-navy tracking-tight">
-                Halo, Calon Anggota 👋
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-brand-navy tracking-tight">
+                Halo, {{ $user->Nama ?? 'Calon Anggota' }}
             </h2>
-            <p class="text-slate-500 mt-3 text-base">
-                Pantau progres tahapan seleksi ILBBEC kamu di bawah ini.
+            <p class="text-slate-500 mt-2.5 text-sm md:text-base">
+                Pantau seluruh rangkaian dan progres tahapan seleksi ILBBEC di bawah ini.
             </p>
         </div>
 
-        <!-- ========================================== -->
-        <!-- TIMELINE DESKTOP (Horizontal)              -->
-        <!-- ========================================== -->
-        <div class="hidden md:block">
-            <!-- Timeline Indicator -->
-            <div class="relative flex justify-between mb-12">
-                <!-- Garis Penghubung -->
-                <div class="absolute top-5 left-0 w-full h-[3px] bg-slate-100 -z-10 rounded-full"></div>
-                
-                @foreach($stages as $index => $stage)
-                <div class="flex flex-col items-center bg-white px-4 relative">
-                    <!-- Lingkaran -->
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-all border-4 border-white
-                        {{ $stage['status'] == 'Selesai' ? 'bg-ilbbec-navy text-white' : 
-                          ($stage['status'] == 'Sedang Berlangsung' ? 'bg-ilbbec-orange text-white ring-4 ring-orange-100' : 'bg-slate-200 text-slate-500') }}">
-                        @if($stage['status'] == 'Selesai')
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                        @else
-                            {{ $index + 1 }}
-                        @endif
-                    </div>
-                    <!-- Label Bawah -->
-                    <span class="mt-4 text-sm font-semibold {{ $stage['status'] == 'Belum Dimulai' || $stage['status'] == 'Menunggu' ? 'text-slate-400' : 'text-ilbbec-navy' }}">
-                        {{ $stage['title'] }}
-                    </span>
-                </div>
-                @endforeach
-            </div>
+        <!-- TIMELINE HORIZONTAL -->
+        <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm mb-10">
+            <div class="overflow-x-auto pb-4 pt-2 -mx-2 px-2">
+                <div class="min-w-[620px] md:min-w-0 relative">
+                    
+                    <!-- Garis Penghubung Track Background -->
+                    <div class="absolute top-5 left-[12.5%] right-[12.5%] h-1 bg-slate-100 rounded-full -z-0"></div>
+                    
+                    <!-- Garis Penghubung Progress Aktif -->
+                    <div class="absolute top-5 left-[12.5%] h-1 bg-brand-blue rounded-full -z-0 transition-all duration-500"
+                        style="width: {{ $progressWidth }};"></div>
 
-            <!-- Kartu Detail Seleksi -->
-            <div class="grid grid-cols-4 gap-6">
-                @foreach($stages as $stage)
-                <div class="bg-white rounded-2xl p-6 shadow-[0_4px_24px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-full hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition duration-300">
-                    
-                    <div class="mb-4">
-                        <span class="inline-block px-3 py-1.5 text-xs font-bold rounded-md {{ $stage['status_color'] }}">
-                            {{ $stage['status'] }}
-                        </span>
-                    </div>
-                    
-                    <h3 class="text-lg font-bold text-ilbbec-navy mb-5">{{ $stage['title'] }}</h3>
-                    
-                    <div class="space-y-4 text-sm text-slate-500 mt-auto font-medium">
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <span>{{ $stage['date'] }}</span>
+                    <!-- 4 Titik Tahapan -->
+                    <div class="relative z-10 grid grid-cols-4">
+                        
+                        <!-- TAHAP 1: PENDAFTARAN -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-all border-4 border-white
+                                {{ $selesaiBerkas ? 'bg-brand-blue text-white ring-4 ring-blue-50' : 'bg-brand-blue text-white ring-4 ring-blue-100 animate-pulse' }}">
+                                @if($selesaiBerkas)
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                @else
+                                    1
+                                @endif
+                            </div>
+                            <div class="mt-3">
+                                <h4 class="text-xs md:text-sm font-bold text-brand-navy">Pendaftaran</h4>
+                                @if($selesaiBerkas)
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 mt-0.5">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                        Selesai
+                                    </span>
+                                @else
+                                    <span class="inline-block text-[11px] font-semibold text-amber-600 mt-0.5">Aktif</span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span>{{ $stage['time'] }}</span>
+
+                        <!-- TAHAP 2: STUDY CASE -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-all border-4 border-white
+                                {{ $selesaiSC ? 'bg-brand-blue text-white ring-4 ring-blue-50' : ($aktifSC ? 'bg-brand-blue text-white ring-4 ring-blue-100 animate-pulse' : ($jadwalSC ? 'bg-slate-100 text-slate-700 border-2 border-slate-300' : 'bg-slate-100 text-slate-400 border-2 border-slate-200')) }}">
+                                @if($selesaiSC)
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                @else
+                                    2
+                                @endif
+                            </div>
+                            <div class="mt-3">
+                                <h4 class="text-xs md:text-sm font-bold text-brand-navy">Study Case</h4>
+                                @if($selesaiSC)
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 mt-0.5">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                        Selesai
+                                    </span>
+                                @elseif($aktifSC)
+                                    <span class="inline-block text-[11px] font-semibold text-brand-blue mt-0.5">Sedang Berlangsung</span>
+                                @elseif($jadwalSC)
+                                    <span class="inline-block text-[11px] font-medium text-slate-500 mt-0.5">Dijadwalkan</span>
+                                @else
+                                    <span class="inline-block text-[11px] font-medium text-slate-400 mt-0.5">Menunggu</span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            <span>{{ $stage['location'] }}</span>
+
+                        <!-- TAHAP 3: WAWANCARA -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-all border-4 border-white
+                                {{ $selesaiWwn ? 'bg-brand-blue text-white ring-4 ring-blue-50' : ($aktifWwn ? 'bg-brand-blue text-white ring-4 ring-blue-100 animate-pulse' : ($jadwalWwn ? 'bg-slate-100 text-slate-700 border-2 border-slate-300' : 'bg-slate-100 text-slate-400 border-2 border-slate-200')) }}">
+                                @if($selesaiWwn)
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                @else
+                                    3
+                                @endif
+                            </div>
+                            <div class="mt-3">
+                                <h4 class="text-xs md:text-sm font-bold text-brand-navy">Wawancara</h4>
+                                @if($selesaiWwn)
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 mt-0.5">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                        Selesai
+                                    </span>
+                                @elseif($aktifWwn)
+                                    <span class="inline-block text-[11px] font-semibold text-brand-blue mt-0.5">Sedang Berlangsung</span>
+                                @elseif($jadwalWwn)
+                                    <span class="inline-block text-[11px] font-medium text-slate-500 mt-0.5">Dijadwalkan</span>
+                                @else
+                                    <span class="inline-block text-[11px] font-medium text-slate-400 mt-0.5">Menunggu</span>
+                                @endif
+                            </div>
                         </div>
-                        @if($stage['title'] == 'Pendaftaran Berkas')
-                        <div class="mt-auto pt-2">
-                            @if($hasPendaftaran)
-                                <button disabled class="w-full bg-slate-100 text-slate-400 font-semibold py-2.5 px-4 rounded-xl text-sm cursor-not-allowed">
-                                    Telah Terdaftar
-                                </button>
-                            @elseif($stage['status'] == 'Sedang Berlangsung' || $stage['status'] == 'Belum Dimulai')
-                                <button type="button" data-modal-open="pendaftaran-modal" class="w-full text-center bg-sky-100 border border-blue-800 hover:bg-sky-900 font-semibold py-2.5 px-4 rounded-xl text-sm shadow-sm">
-                                    Isi Formulir
-                                </button>
-                            @else
-                                <button disabled class="w-full bg-slate-100 text-slate-400 font-semibold py-2.5 px-4 rounded-xl text-sm cursor-not-allowed">
-                                    Selesai
-                                </button>
-                            @endif
+
+                        <!-- TAHAP 4: PENGUMUMAN -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-all border-4 border-white
+                                {{ $selesaiPengumuman ? 'bg-brand-blue text-white ring-4 ring-blue-50' : ($aktifPengumuman ? 'bg-brand-blue text-white ring-4 ring-blue-100 animate-pulse' : 'bg-slate-100 text-slate-400 border-2 border-slate-200') }}">
+                                @if($selesaiPengumuman)
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                @else
+                                    4
+                                @endif
+                            </div>
+                            <div class="mt-3">
+                                <h4 class="text-xs md:text-sm font-bold text-brand-navy">Pengumuman</h4>
+                                @if($selesaiPengumuman)
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 mt-0.5">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                        Selesai
+                                    </span>
+                                @elseif($aktifPengumuman)
+                                    <span class="inline-block text-[11px] font-semibold text-brand-blue mt-0.5">Tahap Evaluasi</span>
+                                @else
+                                    <span class="inline-block text-[11px] font-medium text-slate-400 mt-0.5">Belum Dimulai</span>
+                                @endif
+                            </div>
                         </div>
-                        @endif
+
                     </div>
                 </div>
-                @endforeach
             </div>
         </div>
 
         <!-- ========================================== -->
-        <!-- TIMELINE MOBILE (Vertical)                 -->
+        <!-- KARTU INFORMASI LANJUTAN                   -->
         <!-- ========================================== -->
-        <div class="md:hidden relative border-l-2 border-slate-100 ml-4 space-y-8 mt-10">
-            @foreach($stages as $index => $stage)
-            <div class="relative pl-8">
-                
-                <div class="absolute -left-[17px] top-4 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-4 border-white
-                    {{ $stage['status'] == 'Selesai' ? 'bg-ilbbec-navy text-white' : 
-                      ($stage['status'] == 'Sedang Berlangsung' ? 'bg-ilbbec-orange text-white' : 'bg-slate-200 text-slate-500') }}">
-                    @if($stage['status'] == 'Selesai')
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            <!-- TAHAP 1: PENDAFTARAN BERKAS -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tahap 01</span>
+                    @if($hasPendaftaran)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Selesai
+                        </span>
                     @else
-                        {{ $index + 1 }}
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                            Sedang Berlangsung
+                        </span>
                     @endif
                 </div>
-                
-                <div class="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 relative overflow-hidden">
-                    @if($stage['status'] == 'Sedang Berlangsung')
-                        <div class="absolute top-0 left-0 w-1 h-full bg-ilbbec-orange"></div>
-                    @endif
-                    
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-base font-bold text-ilbbec-navy">{{ $stage['title'] }}</h3>
-                        <span class="px-2 py-1 text-[10px] font-bold rounded-md {{ $stage['status_color'] }} whitespace-nowrap ml-2">
-                            {{ $stage['status'] }}
+
+                <h3 class="text-lg font-bold text-brand-navy mb-4">Pendaftaran Berkas</h3>
+
+                <div class="space-y-3 text-sm text-slate-600 mb-6 flex-grow font-medium">
+                    <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                        <span class="text-slate-400 text-xs">Tanggal</span>
+                        <span class="font-semibold text-slate-700">{{ $pendaftaran ? $pendaftaran->created_at->format('d M Y') : '-' }}</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                        <span class="text-slate-400 text-xs">Waktu</span>
+                        <span class="font-semibold text-slate-700">{{ $pendaftaran ? $pendaftaran->created_at->format('H:i') . ' WIB' : '-' }}</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                        <span class="text-slate-400 text-xs">Status Berkas</span>
+                        <span class="font-semibold {{ ($pendaftaran && $pendaftaran->StatusBerkas === 'Lolos') ? 'text-emerald-600' : 'text-slate-700' }}">
+                            {{ $pendaftaran ? ($pendaftaran->StatusBerkas ?? 'Menunggu') : 'Belum Submit' }}
                         </span>
                     </div>
-                    
-                    <div class="space-y-3 text-xs text-slate-500 font-medium">
-                        <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <span>{{ $stage['date'] }}</span>
+                    @if($pendaftaran && $pendaftaran->Divisi)
+                    <div class="flex items-center justify-between py-1">
+                        <span class="text-slate-400 text-xs">Divisi Pilihan</span>
+                        <span class="font-semibold text-brand-navy text-xs px-2 py-0.5 bg-blue-50 rounded">{{ $pendaftaran->Divisi }}</span>
+                    </div>
+                    @endif
+                </div>
+
+                <div class="mt-auto pt-2">
+                    @if($hasPendaftaran)
+                        <button disabled class="w-full flex items-center justify-center gap-2 bg-slate-100 text-slate-400 font-semibold py-2.5 px-4 rounded-xl text-sm cursor-not-allowed">
+                            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                            Telah Terdaftar
+                        </button>
+                    @else
+                        <button type="button" data-modal-open="pendaftaran-modal" class="w-full flex items-center justify-center gap-2 bg-brand-blue hover:bg-blue-800 text-white font-semibold py-2.5 px-4 rounded-xl text-sm shadow-sm transition hover:shadow-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            Isi Formulir
+                        </button>
+                    @endif
+                </div>
+            </div>
+
+            <!-- TAHAP 2: STUDY CASE -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tahap 02</span>
+                    @if($selesaiSC)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Selesai
+                        </span>
+                    @elseif($jadwalSC && $jadwalSC->IsActive)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-brand-blue border border-blue-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+                            Aktif
+                        </span>
+                    @elseif($jadwalSC)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                            Dijadwalkan
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-500 border border-slate-200">
+                            Belum Ada Jadwal
+                        </span>
+                    @endif
+                </div>
+
+                <h3 class="text-lg font-bold text-brand-navy mb-4">Study Case</h3>
+
+                <div class="space-y-3 text-sm text-slate-600 mb-6 flex-grow font-medium">
+                    @if($jadwalSC && $bukaSC)
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Tanggal</span>
+                            <span class="font-semibold text-slate-700">{{ $tglSC->format('d M Y') }}</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span>{{ $stage['time'] }}</span>
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Waktu</span>
+                            <span class="font-semibold text-slate-700">{{ \Carbon\Carbon::parse($jadwalSC->WaktuMulai)->format('H:i') }} WIB</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            <span>{{ $stage['location'] }}</span>
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Ruangan / Sesi</span>
+                            <span class="font-semibold text-slate-700">{{ $studyCase->Lokasi ?? ('Sesi ID: ' . $jadwalSC->SesiId) }}</span>
                         </div>
-                        @if($stage['title'] == 'Pendaftaran Berkas')
-                            @if($hasPendaftaran)
-                                <button disabled class="w-full bg-slate-100 text-slate-400 font-semibold py-2.5 px-4 rounded-xl text-sm cursor-not-allowed">
-                                    Telah Terdaftar
-                                </button>
-                            @elseif($stage['status'] == 'Sedang Berlangsung' || $stage['status'] == 'Belum Dimulai')
-                                <button type="button" data-modal-open="pendaftaran-modal" class="w-full text-center bg-sky-100 border border-blue-800 hover:bg-sky-900 font-semibold py-2.5 px-4 rounded-xl text-sm shadow-sm">
-                                    Isi Formulir
-                                </button>
+                        @if($studyCase && $studyCase->Kelompok)
+                        <div class="flex items-center justify-between py-1">
+                            <span class="text-slate-400 text-xs">Kelompok</span>
+                            <span class="font-semibold text-brand-navy text-xs px-2 py-0.5 bg-blue-50 rounded">{{ $studyCase->Kelompok }}</span>
+                        </div>
+                        @endif
+                    @else
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Tanggal</span>
+                            <span class="font-semibold text-slate-700">{{ ($jadwalSC && $tglSC) ? $tglSC->format('d M Y') : '-' }}</span>
+                        </div>
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Waktu</span>
+                            <span class="text-slate-400 italic text-xs">Terkunci (H-3)</span>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed italic">
+                            Detail waktu & ruangan baru akan dibuka secara otomatis pada H-3 dari jadwal sesi.
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- TAHAP 3: WAWANCARA -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tahap 03</span>
+                    @if($selesaiWwn)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Selesai
+                        </span>
+                    @elseif($jadwalWwn && $jadwalWwn->IsActive)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-brand-blue border border-blue-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+                            Aktif
+                        </span>
+                    @elseif($jadwalWwn)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                            Dijadwalkan
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-500 border border-slate-200">
+                            Belum Ada Jadwal
+                        </span>
+                    @endif
+                </div>
+
+                <h3 class="text-lg font-bold text-brand-navy mb-4">Wawancara</h3>
+
+                <div class="space-y-3 text-sm text-slate-600 mb-6 flex-grow font-medium">
+                    @if($jadwalWwn && $bukaWwn)
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Tanggal</span>
+                            <span class="font-semibold text-slate-700">{{ $tglWwn->format('d M Y') }}</span>
+                        </div>
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Waktu</span>
+                            <span class="font-semibold text-slate-700">{{ \Carbon\Carbon::parse($jadwalWwn->WaktuMulai)->format('H:i') }} WIB</span>
+                        </div>
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Ruangan / Lokasi</span>
+                            <span class="font-semibold text-slate-700">{{ $wawancara->Lokasi ?? ('Sesi ID: ' . $jadwalWwn->SesiId) }}</span>
+                        </div>
+                    @else
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Tanggal</span>
+                            <span class="font-semibold text-slate-700">{{ ($jadwalWwn && $tglWwn) ? $tglWwn->format('d M Y') : '-' }}</span>
+                        </div>
+                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                            <span class="text-slate-400 text-xs">Waktu</span>
+                            <span class="text-slate-400 italic text-xs">Terkunci (H-3)</span>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed italic">
+                            Detail waktu & ruangan wawancara baru akan dibuka secara otomatis pada H-3 dari jadwal sesi.
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- TAHAP 4: PENGUMUMAN -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tahap 04</span>
+                    @if($selesaiPengumuman)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            Selesai
+                        </span>
+                    @elseif($aktifPengumuman)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-brand-blue border border-blue-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+                            Tahap Evaluasi
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-500 border border-slate-200">
+                            Belum Dimulai
+                        </span>
+                    @endif
+                </div>
+
+                <h3 class="text-lg font-bold text-brand-navy mb-4">Pengumuman</h3>
+
+                <div class="space-y-3 text-sm text-slate-600 mb-6 flex-grow font-medium">
+                    <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                        <span class="text-slate-400 text-xs">Hasil Seleksi</span>
+                        @if($pendaftaran && $pendaftaran->StatusAkhir)
+                            @if($pendaftaran->StatusAkhir === 'Lolos')
+                                <span class="font-bold text-xs px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">Lolos Seleksi 🎉</span>
+                            @elseif(in_array($pendaftaran->StatusAkhir, ['Tidak Lolos', 'Gagal']))
+                                <span class="font-bold text-xs px-2.5 py-1 rounded-md bg-rose-50 text-rose-700 border border-rose-200">Tidak Lolos</span>
+                            @else
+                                <span class="font-bold text-xs px-2.5 py-1 rounded-md bg-blue-50 text-brand-blue border border-blue-200">{{ $pendaftaran->StatusAkhir }}</span>
                             @endif
+                        @else
+                            <span class="text-slate-400 text-xs italic">Menunggu Evaluasi</span>
+                        @endif
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-500 leading-relaxed">
+                        @if($pendaftaran && $pendaftaran->StatusAkhir === 'Lolos')
+                            Selamat! Anda dinyatakan lolos sebagai anggota ILBBEC. Informasi onboarding akan segera disampaikan.
+                        @elseif($pendaftaran && in_array($pendaftaran->StatusAkhir, ['Tidak Lolos', 'Gagal']))
+                            Terima kasih atas partisipasi Anda dalam seleksi ILBBEC. Tetap semangat dan jangan menyerah!
+                        @else
+                            Pengumuman kelolosan final akan diperbarui setelah seluruh tahapan seleksi selesai dievaluasi.
                         @endif
                     </div>
                 </div>
             </div>
-            @endforeach
+
         </div>
+
+        <!-- Form Pendaftaran Modal -->
         @include('modals.form')
     </main>
-
-    <!-- Bottom Navigation (Mobile) -->
-    <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-100 shadow-[0_-4px_20px_rgb(0,0,0,0.04)] z-50 px-8 py-3 flex justify-between items-center text-xs pb-safe">
-        <a href="#" class="flex flex-col items-center text-slate-900">
-            <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" /><path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" /></svg>
-            <span class="font-bold">Home</span>
-        </a>
-        <a href="#" class="flex flex-col items-center text-slate-400 hover:text-slate-900 transition-colors">
-            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-            <span class="font-medium">Information</span>
-        </a>
-        <a href="#" class="flex flex-col items-center text-slate-400 hover:text-slate-900 transition-colors">
-            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-            <span class="font-medium">Profile</span>
-        </a>
-    </nav>
 @endsection

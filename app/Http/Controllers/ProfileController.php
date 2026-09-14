@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Prodi;
 
 class ProfileController extends Controller
 {
@@ -38,7 +39,28 @@ class ProfileController extends Controller
             'nomor' => $nomorTahap,
             'nama' => $tahapan[$nomorTahap] ?? 'Belum Mendaftar',
         ];
+
+        $prodis = Prodi::all();
         // 4. Kirim data ke tampilan view profile
-        return view('user.profile', compact('user', 'pendaftaran', 'tahapAktif'));
+        return view('user.profile', compact('user', 'pendaftaran', 'tahapAktif', 'prodis'));
+    }
+
+    public function update(Request $request)
+    {
+        $user = auth()->user();
+
+        // Validasi input
+        $validatedData = $request->validate([
+            'Nama' => 'required|string|max:255',
+            'Npm' => 'required|string|max:20|unique:users,Npm,' . $user->UserId . ',UserId',
+            'NoTlp' => 'nullable|string|max:20',
+            'TanggalLahir' => 'nullable|string|max:500',
+            'ProdiId' => 'required|exists:prodi,ProdiId',
+        ]);
+
+        // Update data user
+        $user->update($validatedData);
+
+        return redirect()->route('user.profile')->with('success', 'Profil berhasil diperbarui.');
     }
 }

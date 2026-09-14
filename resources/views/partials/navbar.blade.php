@@ -12,6 +12,7 @@
                     <div class="flex items-center gap-1.5">
                         <span class="font-extrabold text-xl tracking-tight text-brand-navy group-hover:text-brand-blue transition-colors">ILBBEC</span>
                     </div>
+
                     <span class="text-[10px] text-slate-500 font-medium tracking-normal hidden sm:inline-block leading-tight">
                         International Logistics & Business Baccalaureate English Center
                     </span>
@@ -31,8 +32,8 @@
 
             <!-- Desktop CTA -->
             <div class="hidden md:flex items-center gap-3">
-                <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-blue hover:bg-brand-blue-dark shadow-md hover:shadow-glow transition-all duration-300 group">
-                    <span>Join Us</span>
+                <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-blue hover:bg-brand-blue-dark shadow-md hover:shadow-glow transition-all duration-300 group">
+                    <span>Login</span>
                     <svg class="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                     </svg>

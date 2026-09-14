@@ -21,23 +21,23 @@
 
                 <!-- Short Description -->
                 <p class="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl">
-                    Empowering students of <span class="font-semibold text-brand-navy">Universitas Logistik & Bisnis Internasional</span> with fluent English communication, global logistics and business acumen, international debate leadership, and a world-class professional network.
+                    ILBBEC is a community for students of <span class="font-semibold text-brand-navy">Universitas Logistik & Bisnis Internasional</span> to improve their English skills and communication skills. Through learning, discussions, teamwork, and various activities, members can practice English, exchange ideas, build confidence, and grow together.
                 </p>
 
                 <!-- CTAs -->
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto pt-2">
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-7 py-4 rounded-xl text-base font-semibold text-white bg-brand-blue hover:bg-brand-blue-dark shadow-lg shadow-brand-blue/20 hover:shadow-glow transition-all duration-300 group">
+                    {{-- <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-7 py-4 rounded-xl text-base font-semibold text-white bg-brand-blue hover:bg-brand-blue-dark shadow-lg shadow-brand-blue/20 hover:shadow-glow transition-all duration-300 group">
                         <span>Join ILBBEC 2026</span>
                         <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                         </svg>
-                    </a>
+                    </a> --}}
                     <a href="{{ request()->is('/') ? '#activities' : route('home') . '#activities' }}" class="inline-flex items-center justify-center px-6 py-4 rounded-xl text-base font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:border-brand-blue/30 transition-all duration-300">
                         <svg class="w-5 h-5 mr-2 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span>Explore Activities</span>
+                        <span>Explore More</span>
                     </a>
                 </div> 
             </div>
@@ -50,12 +50,12 @@
                 
                 <!-- Main Collaborating Photo -->
                 <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 aspect-[4/3] sm:aspect-[16/11]">
-                   <img 
-                            src="./images/sertijab.jpeg" 
-                            alt="ULBI Students Collaborating at ILBBEC" 
-                            class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-                            loading="eager"
-                        >
+                    <img 
+                        src="./images/sertijab.jpeg" 
+                        alt="ULBI Students Collaborating at ILBBEC" 
+                        class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                        loading="eager"
+                    >
                     <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/60 via-transparent to-transparent"></div>
                     
                     <div class="absolute bottom-10 left-4 right-4 text-white">

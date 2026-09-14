@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PendaftaranController;
@@ -28,11 +27,15 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user', [UserController::class, 'index'])->name('user.home');
     Route::post('/pendaftaran', [PendaftaranController::class, 'CreatePendaftaran'])->name('pendaftaran.create');
     Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.home');
+    Route::get('/admin/peserta', [AdminController::class, 'peserta'])->name('admin.peserta');
+    Route::get('/admin/jadwal', [AdminController::class, 'jadwal'])->name('admin.jadwal');
+    Route::post('/admin/jadwal', [AdminController::class, 'storeJadwal'])->name('admin.jadwal.store');
+    Route::delete('/admin/jadwal/{id}', [AdminController::class, 'destroyJadwal'])->name('admin.jadwal.destroy');
 });
 
 // ── Logout (Auth only) ────────────────────────────────────────────────────────

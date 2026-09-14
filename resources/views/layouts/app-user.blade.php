@@ -163,4 +163,19 @@
     <main class="flex-grow">
         @yield('content')
     </main>
+
+    <!-- Bottom Navigation Bar for User (Mobile) -->
+    @auth
+        <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-100 shadow-[0_-4px_20px_rgb(0,0,0,0.04)] z-50 px-6 py-2 flex justify-around items-center text-xs pb-safe">
+            <a href="{{ route('user.home') }}" class="flex flex-col items-center py-1 px-4 rounded-xl transition {{ request()->routeIs('user.home') ? 'text-brand-blue font-bold' : 'text-slate-400 hover:text-slate-900 font-medium' }}">
+                <svg class="w-5 h-5 mb-1" fill="{{ request()->routeIs('user.home') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24"><path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" /><path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" /></svg>
+                <span>Home</span>
+            </a>
+            <a href="{{ route('user.profile') }}" class="flex flex-col items-center py-1 px-4 rounded-xl transition {{ request()->routeIs('user.profile') ? 'text-brand-blue font-bold' : 'text-slate-400 hover:text-slate-900 font-medium' }}">
+                <svg class="w-5 h-5 mb-1" fill="{{ request()->routeIs('user.profile') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span>Profile</span>
+            </a>
+        </nav>
+    @endauth
 </body>
+</html>

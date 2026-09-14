@@ -1,42 +1,36 @@
 @extends('layouts.app-user')
 
 @section('content')
-<main class="bg-slate-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
+<main class="bg-slate-50 min-h-screen pt-8 pb-24 md:py-10 px-4 sm:px-6 lg:px-8 font-sans">
   <div class="max-w-4xl mx-auto space-y-6">
     
     <!-- 1. Header Card (Foto, Nama, Status) -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 sm:p-8">
       <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
         
-        <!-- Avatar / Foto Profil -->
-        <div class="relative">
-          <img 
-            alt="Foto Profil" 
-            class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-blue-50 shadow-md"
-          />
-        </div>
-
         <!-- Informasi Utama & Tombol Aksi -->
-        <div x-data="{ openEditModal: false }" class="flex-1 text-center sm:text-left space-y-3">
-          <div>
-            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
-              <h1 class="text-2xl font-bold text-slate-800">{{ $user->Nama }}</h1>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                Mahasiswa Aktif
-              </span>
-            </div>
-            <p class="text-slate-500 font-medium">NPM: {{ $user->Npm }}</p>
-          </div>
+        <div class="flex flex-col sm:flex-row items-start gap-6 w-full">
+          <div class="flex-1 w-full text-left space-y-3">
+            <div class="flex flex-col sm:flex-row items-start justify-between gap-4 w-full">
+              
+              <div class="space-y-1 text-left w-full sm:w-auto">
+                <h1 class="text-2xl font-bold text-slate-800 leading-tight">{{ $user->Nama }}</h1>
+                <p class="text-slate-500 font-medium">NPM: {{ $user->Npm }}</p>
+              </div>
 
-          <!-- Tombol Aksi -->
-          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-2">
-            <button @click="openEditModal = true" type="button" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition shadow-sm">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor"p viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 210.3H3v-3.572L16.732 3.732z"></path></svg>
-              Edit Profil
-            </button>
+              <!-- Tombol Edit Profil (Rata kiri di mobile, rata kanan di desktop) -->
+              <div class="flex justify-start sm:justify-end w-full sm:w-auto">
+                <button
+                  data-modal-open="edit-modal"
+                  type="button" 
+                  class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition shadow-sm shrink-0">
+                  Edit Profil
+                </button>
+              </div>
+
+            </div>
           </div>
         </div>
-        @include('modals.edit-profile')
       </div>
     </div>
 
@@ -95,5 +89,6 @@
     </div>
 
   </div>
+  @include('modals.edit-profile')
 </main>
 @endsection

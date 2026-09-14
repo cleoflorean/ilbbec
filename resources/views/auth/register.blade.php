@@ -8,7 +8,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
         {{-- Card Header --}}
-        <div class="px-8 pt-8 pb-6 border-b border-slate-100">
+        <div class="px-5 sm:px-8 pt-6 sm:pt-8 pb-5 sm:pb-6 border-b border-slate-100">
             <div class="flex items-center gap-3 mb-1">
                 <div class="w-9 h-9 rounded-xl bg-brand-blue-50 flex items-center justify-center">
                     <svg class="w-5 h-5 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('register') }}" class="px-8 py-7 space-y-5">
+        <form method="POST" action="{{ route('register') }}" class="px-5 sm:px-8 py-6 sm:py-7 space-y-5">
             @csrf
 
             {{-- Flash success --}}

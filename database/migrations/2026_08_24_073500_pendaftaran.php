@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pendaftaran', function (Blueprint $table) {
             $table->increments('PendaftaranId');
             $table->unsignedInteger('UserId');
-            $table->string('Divisi', 10);
+            $table->string('Divisi', 50);
             $table->string('BerkasCV', 255)->nullable();
             $table->string('Portofolio', 255)->nullable();
             $table->string('StatusBerkas', 10);

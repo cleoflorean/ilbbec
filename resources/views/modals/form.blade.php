@@ -1,13 +1,13 @@
-<div id="pendaftaran-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-950/60 p-4" role="dialog" aria-modal="true" aria-labelledby="pendaftaran-modal-title" hidden>
+<div id="pendaftaran-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-950/60 p-3 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="pendaftaran-modal-title" hidden>
     <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl">
-        <div class="flex items-center justify-between border-b border-slate-200 p-5">
+        <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
             <h2 class="text-lg font-bold text-slate-900" id="pendaftaran-modal-title">Form Pendaftaran</h2>
             <button type="button" data-modal-close="pendaftaran-modal" class="rounded-lg p-2 text-2xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-700" aria-label="Tutup form pendaftaran">&times;</button>
         </div>
-        <div class="p-5">
+        <div class="px-5 py-4 sm:py-5">
             <form id="pendaftaran-form" action="{{ route('pendaftaran.create') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="text" name="UserId" value="{{Auth::id()}}">
+                <input type="hidden" name="UserId" value="{{Auth::id()}}">
                     <div class="mb-3">
                             <label for="pendaftaran-nama" class="mb-1 block text-sm font-medium text-slate-700">Nama</label>
                             {{-- Atribut 'disabled' ditambahkan & 'name' dihapus agar TIDAK TERKIRIM saat POST --}}
@@ -21,7 +21,7 @@
                             <small class="text-xs text-slate-400">*Nama terisi otomatis berdasarkan akun Anda</small>
                     </div>                                                  
                             <div class="mb-3">
-                                <label for="pendaftaran-nip" class="mb-1 block text-sm font-medium text-slate-700">NPM</label>
+                                <label for="pendaftaran-npm" class="mb-1 block text-sm font-medium text-slate-700">NPM</label>
                                 <input 
                                     id="pendaftaran-npm" 
                                     type="text" 
@@ -41,16 +41,18 @@
                                     <option value="Media & Information">Media & Information</option>
                                 </select>
                             </div>
-                                 <div class="mb-3">
+                                <div class="mb-3">
                                     <label for="pendaftaran-cv" class="mb-1 block text-sm font-medium text-slate-700">Upload CV (PDF)</label>
                                     <input type="file" name="BerkasCV" id="pendaftaran-cv" class="w-full rounded-lg border border-slate-300 px-3 py-2" accept="application/pdf" required>
                                 </div>
-                                 <div class="mb-3">
+                                <div class="mb-3">
                                     <label for="pendaftaran-portofolio" class="mb-1 block text-sm font-medium text-slate-700">Upload Portofolio Opsional (PDF)</label>
                                     <input type="file" name="Portofolio" id="pendaftaran-portofolio" class="w-full rounded-lg border border-slate-300 px-3 py-2" accept="application/pdf">
                                 </div>
                                 {{-- <input type="hidden" name="Status" value="Aktif"> --}}
-                            <button type="submit" class="rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white hover:bg-blue-800">Kirim Pendaftaran</button>
+                            <div class="pt-2 flex justify-end">
+                                <button type="submit" class="w-full sm:w-auto rounded-xl bg-brand-blue px-6 py-2.5 font-semibold text-white hover:bg-blue-800 shadow-md transition">Kirim Pendaftaran</button>
+                            </div>
             </form>
         </div>
     </div>

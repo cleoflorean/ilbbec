@@ -9,7 +9,7 @@ class JadwalSesi extends Model
     protected $table = 'jadwal_sesi';
     protected $primaryKey = 'SesiId';
     protected $fillable = [
-        'TanggalSesi', 'WaktuMulai', 'Lokasi', 'IsActive'
+        'NamaSesi', 'TanggalMulai', 'TanggalSelesai', 'Jam', 'Lokasi', 'IsActive'
     ];
 
     public function study_case()

@@ -51,29 +51,31 @@
 <body class="min-h-screen bg-slate-50 flex flex-col">
 
     {{-- Minimal top bar --}}
-    <div class="max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20">
-            <div class="flex items-center gap-3 group">
-                <div class="relative w-12 h-12 flex-shrink-0 flex items-center justify-center p-0.5 bg-white rounded-xl shadow-sm border border-slate-100 group-hover:shadow-md transition-shadow">
-                    <img src="{{ asset('images/logo.png') }}" alt="ILBBEC Logo" class="w-full h-full object-contain">
-                </div>
-                <div class="flex flex-col">
-                    <div class="flex items-center gap-1.5">
-                        <span class="font-extrabold text-xl tracking-tight text-brand-navy group-hover:text-brand-blue transition-colors">ILBBEC</span>
+    <header class="w-full bg-white/80 backdrop-blur border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <a href="{{ route('home') }}" class="flex items-center gap-2.5 sm:gap-3 group">
+                    <div class="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 flex items-center justify-center p-0.5 bg-white rounded-xl shadow-sm border border-slate-100 group-hover:shadow-md transition-shadow">
+                        <img src="{{ asset('images/logo.png') }}" alt="ILBBEC Logo" class="w-full h-full object-contain">
                     </div>
-                    <span class="text-[10px] text-slate-500 font-medium tracking-normal hidden sm:inline-block leading-tight">
-                        International Logistics & Business Baccalaureate English Center
-                    </span>
-                </div>
-                <a href="{{ route('home') }}" class="text-xs text-slate-500 hover:text-brand-blue transition-colors inline-flex items-center gap-1">
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-extrabold text-lg sm:text-xl tracking-tight text-brand-navy group-hover:text-brand-blue transition-colors">ILBBEC</span>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium tracking-normal hidden sm:inline-block leading-tight">
+                            International Logistics & Business Baccalaureate English Center
+                        </span>
+                    </div>
+                </a>
+                <a href="{{ route('home') }}" class="text-xs font-semibold text-slate-500 hover:text-brand-blue transition-colors inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg hover:bg-slate-50 border border-slate-200/60">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
-                    Kembali ke Beranda
+                    <span>Beranda</span>
                 </a>
             </div>
         </div>
-    </div>
+    </header>
 
 
 

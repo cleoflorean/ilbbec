@@ -9,7 +9,7 @@ class StudyCase extends Model
     protected $table = 'study_case';
     protected $primaryKey = 'CaseId';
     protected $fillable = [
-        'PendaftaranId', 'SesiId', 'Kelompok', 'NilaiKasus', 'Catatan', 'StatusKasus'
+        'PendaftaranId', 'SesiId', 'Lokasi', 'Kelompok', 'NilaiKasus', 'Catatan', 'StatusKasus'
     ];
 
     public function pendaftaran()

@@ -6,16 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('jadwal_sesi', function (Blueprint $table) {
             $table->increments('SesiId');
-            $table->string('TanggalSesi', 20);
-            $table->time('WaktuMulai');
-            $table->string('Lokasi', 10);
+            $table->string('NamaSesi', 50);
+            $table->date('TanggalMulai');
+            $table->date('TanggalSelesai');
+            $table->time('Jam');
+            $table->string('Lokasi', 50)->nullable();
             $table->boolean('IsActive');
             $table->timestamps();
         });
