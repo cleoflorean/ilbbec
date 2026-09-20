@@ -35,6 +35,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/peserta', [AdminController::class, 'peserta'])->name('admin.peserta');
     Route::get('/admin/jadwal', [AdminController::class, 'jadwal'])->name('admin.jadwal');
     Route::post('/admin/jadwal', [AdminController::class, 'storeJadwal'])->name('admin.jadwal.store');
+    Route::post('admin/peserta/{id}/status', [AdminController::class, 'updateStatus'])->name('admin.peserta.status');
     Route::delete('/admin/jadwal/{id}', [AdminController::class, 'destroyJadwal'])->name('admin.jadwal.destroy');
 });
 

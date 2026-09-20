@@ -39,42 +39,16 @@
                             type="text"
                             id="peserta-search"
                             placeholder="Cari nama atau NPM..."
-                            class="w-full rounded-xl border border-slate-200
-                            bg-slate-50/50 pl-9 pr-4 py-2.5
-                            text-xs text-slate-700
-                            transition
-                            focus:border-brand-blue
-                            focus:bg-white
-                            focus:outline-none
-                            focus:ring-2 focus:ring-blue-100"
-                        >
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50/50 pl-9 pr-4 py-2.5 text-xs text-slate-700 transition focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
-                            <svg class="h-4 w-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
-                                </path>
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </span>
                     </div>
 
                     <!-- Filter Divisi -->
-                    <select
-                        id="divisi-filter"
-                        class="w-full sm:w-48 rounded-xl border border-slate-200
-                        bg-slate-50/50 px-3 py-2.5
-                        text-xs text-slate-700
-                        transition
-                        focus:border-brand-blue
-                        focus:bg-white
-                        focus:outline-none
-                        focus:ring-2 focus:ring-blue-100"
-                    >
+                    <select id="divisi-filter" class="w-full sm:w-48 rounded-xl border border-slate-200 bg-slate-50/50 px-3 py-2.5 text-xs text-slate-700 transition focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100">
                         <option value="">Semua Divisi</option>
                         <option value="Bendahara">Bendahara</option>
                         <option value="Sekretaris">Sekretaris</option>
@@ -86,135 +60,88 @@
                 </div>
             </div>
 
-            <!-- ===================================================== -->
             <!-- DESKTOP TABLE -->
-            <!-- ===================================================== -->
             <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full text-left text-sm" id="table-peserta">
-                    <thead class="border-b border-slate-100
-                        text-[11px] uppercase tracking-wider
-                        text-slate-400 bg-slate-50/60">
+                    <thead class="border-b border-slate-100 text-[11px] uppercase tracking-wider text-slate-400 bg-slate-50/60">
                         <tr>
-                            <th class="py-3 px-4 font-semibold rounded-l-xl">
-                                No
-                            </th>
-                            <th class="py-3 px-4 font-semibold">
-                                Kandidat
-                            </th>
-                            <th class="py-3 px-4 font-semibold">
-                                Prodi
-                            </th>
-                            <th class="py-3 px-4 font-semibold">
-                                Divisi
-                            </th>
-                            <th class="py-3 px-4 font-semibold">
-                                Status Terkini
-                            </th>
-                            <th class="py-3 px-4 font-semibold">
-                                Status Akhir
-                            </th>
-
-                            <th class="py-3 px-4 font-semibold text-center rounded-r-xl">
-                                Aksi
-                            </th>
-
+                            <th class="py-3 px-4 font-semibold rounded-l-xl">No</th>
+                            <th class="py-3 px-4 font-semibold">Kandidat</th>
+                            <th class="py-3 px-4 font-semibold">Prodi</th>
+                            <th class="py-3 px-4 font-semibold">Divisi </th>
+                            <th class="py-3 px-4 font-semibold">Status Terkini</th>
+                            <th class="py-3 px-4 font-semibold">Status Akhir</th>
+                            <th class="py-3 px-4 font-semibold text-center rounded-r-xl"> Aksi</th>
                         </tr>
-
                     </thead>
 
-
                     <tbody class="divide-y divide-slate-100">
-
                         @forelse($pendaftaran as $index => $item)
-
-                            <tr
-                                class="hover:bg-blue-50/30 transition-colors peserta-item"
-
+                            <tr class="hover:bg-blue-50/30 transition-colors peserta-item"
                                 data-name="{{ strtolower($item->user?->Nama ?? '') }}"
                                 data-npm="{{ strtolower($item->user?->Npm ?? '') }}"
                                 data-divisi="{{ $item->Divisi }}"
-
+                                data-detail-id="{{ $item->id }}"
+                                data-tahap-aktif="{{ $item->tahapAktif ?? '' }}"
                                 data-detail-name="{{ $item->user?->Nama ?? '-' }}"
                                 data-detail-npm="{{ $item->user?->Npm ?? '-' }}"
                                 data-detail-prodi="{{ $item->user?->prodi?->NamaProdi ?? '-' }}"
                                 data-detail-angkatan="{{ $item->user?->Angkatan ?? '-' }}"
                                 data-detail-divisi="{{ $item->Divisi ?? '-' }}"
-                                data-detail-status-terkini="{{ $item->StatusTerkini ?? 'Menunggu' }}"
-                                data-detail-status-akhir="{{ $item->StatusAkhir ?? 'Dalam Proses' }}"
+                                data-detail-status-terkini="{{ $item->statusTerkini ?? 'Seleksi Berkas' }}"
+                                data-detail-status-akhir="{{ $item->statusAkhir ?? 'Dalam Proses' }}"
+                                data-status-berkas="{{ $item->StatusBerkas ?? '' }}"
+                                data-status-case="{{ $item->study_case?->StatusCase ?? '' }}"
+                                data-status-wawancara="{{ $item->wawancara?->StatusWawancara ?? '' }}"
                                 data-detail-date="{{ $item->created_at ? $item->created_at->format('d M Y, H:i') : '-' }}"
-                                data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}"
-                            >
-                                <!-- NO -->
-                                <td class="py-4 px-4 text-xs font-semibold text-slate-400">
-                                    {{ $index + 1 }}
-                                </td>
-                                <!-- KANDIDAT -->
+                                data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}" >
+                                <!-- No -->
+                                <td class="py-4 px-4 text-xs font-semibold text-slate-400">{{ $index + 1 }}</td>
+                                <!-- Kandidat -->
                                 <td class="py-4 px-4">
-                                    <p class="font-bold text-brand-navy">
-                                        {{ $item->user?->Nama ?? 'Nama Belum Diisi' }}
-                                    </p>
-                                    <p class="text-xs text-slate-400 mt-0.5">
-                                        NPM: {{ $item->user?->Npm ?? '-' }}
-                                    </p>
+                                    <p class="font-bold text-brand-navy">{{ $item->user?->Nama ?? 'Nama Belum Diisi' }}</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">NPM: {{ $item->user?->Npm ?? '-' }}</p>
                                 </td>
-                                <!-- PRODI -->
+                                <!-- Prodi -->
                                 <td class="py-4 px-4">
-                                    <p class="text-xs font-medium text-slate-700">
-                                        {{ $item->user?->prodi?->NamaProdi ?? '-' }}
-                                    </p>
+                                    <p class="text-xs font-medium text-slate-700">{{ $item->user?->prodi?->NamaProdi ?? '-' }}</p>
                                 </td>
                                 <!-- DIVISI -->
                                 <td class="py-4 px-4">
-                                    <span class="inline-flex items-center
-                                        px-2.5 py-1 rounded-lg
-                                        text-xs font-semibold
-                                        bg-blue-50 text-brand-blue
-                                        border border-blue-100">
-                                        {{ $item->Divisi }}
-                                    </span>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-50 text-brand-blue border border-blue-100">{{ $item->Divisi }}</span>
                                 </td>
                                 <!-- STATUS TERKINI -->
                                 <td class="py-4 px-4">
-                                    @if($item->StatusTerkini === 'Lolos')
-                                        <span class="inline-flex items-center gap-1
-                                            rounded-full bg-emerald-50
-                                            px-2.5 py-1 text-xs font-semibold
-                                            text-emerald-700 border border-emerald-200">
+                                    @if($item->StatusTerkini === 'Seleksi Berkas')
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200">
                                             <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                                            Lolos
+                                            Seleksi Berkas
                                         </span>
-                                    @elseif($item->StatusTerkini === 'Gagal' || $item->StatusTerkini === 'Tidak Lolos')
-                                        <span class="inline-flex items-center gap-1
-                                            rounded-full bg-rose-50
-                                            px-2.5 py-1 text-xs font-semibold
-                                            text-rose-700 border border-rose-200">
+                                    @elseif($item->StatusTerkini === 'Study Case') 
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700 border border-rose-200">
                                             <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
-                                            Gagal
+                                            Study Case
+                                        </span>
+                                    @elseif($item->StatusTerkini === 'wawancara') 
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700 border border-rose-200">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+                                            Wawancara
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1
-                                            rounded-full bg-amber-50
-                                            px-2.5 py-1 text-xs font-semibold
-                                            text-amber-700 border border-amber-200">
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 border border-amber-200">
                                             <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
-                                            {{ $item->StatusTerkini ?? 'Menunggu' }}
+                                            Menunggu Pengumuman
                                         </span>
                                     @endif
                                 </td>
                                 <!-- STATUS AKHIR -->
                                 <td class="py-4 px-4">
                                     @if($item->StatusAkhir === 'Lolos')
-                                        <span class="inline-flex items-center
-                                            rounded-full bg-emerald-50
-                                            px-2.5 py-1 text-xs font-bold
-                                            text-emerald-700">
+                                        <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
                                             Lolos Seleksi
                                         </span>
                                     @elseif($item->StatusAkhir === 'Tidak Lolos')
-                                        <span class="inline-flex items-center
-                                            rounded-full bg-rose-50
-                                            px-2.5 py-1 text-xs font-bold
-                                            text-rose-700">
+                                        <span class="inline-flex items-center rounded-full bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700">
                                             Tidak Lolos
                                         </span>
                                     @else
@@ -225,40 +152,17 @@
                                 </td>
                                 <!-- AKSI -->
                                 <td class="py-4 px-4 text-center">
-                                    <button
-                                        type="button"
-                                        class="btn-detail inline-flex items-center justify-center
-                                        w-9 h-9 rounded-xl
-                                        border border-slate-200
-                                        text-brand-blue
-                                        hover:bg-blue-50
-                                        transition"
-                                        title="Lihat detail peserta"
-                                    >
-                                        <svg class="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
-                                            </path>
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                            </path>
+                                    <button data-modal-open="detail-peserta" type="button" class="btn-detail inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 text-brand-blue hover:bg-blue-50 transition" title="Lihat detail peserta">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                         </svg>
                                     </button>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7"
-                                    class="py-12 text-center text-slate-400">
+                                <td colspan="7" class="py-12 text-center text-slate-400">
                                     Belum ada kandidat peserta yang mendaftar.
                                 </td>
                             </tr>
@@ -270,16 +174,10 @@
             <!-- MOBILE / TABLET CARD -->
             <div class="lg:hidden space-y-3">
                 @forelse($pendaftaran as $index => $item)
-                    <div
-                        class="peserta-item-mobile rounded-2xl
-                        border border-slate-200
-                        bg-white p-4
-                        hover:border-blue-200
-                        hover:bg-blue-50/20
-                        transition cursor-pointer"
+                    <div class="peserta-item-mobile rounded-2xl border border-slate-200 bg-white p-4 hover:border-blue-200 hover:bg-blue-50/20 transition cursor-pointer"
                         data-name="{{ strtolower($item->user?->Nama ?? '') }}"
                         data-npm="{{ strtolower($item->user?->Npm ?? '') }}"
-                        data-divisi="{{ $item->Divisi }}
+                        data-divisi="{{ $item->Divisi ?? '-' }}"
                         data-detail-name="{{ $item->user?->Nama ?? '-' }}"
                         data-detail-npm="{{ $item->user?->Npm ?? '-' }}"
                         data-detail-prodi="{{ $item->user?->prodi?->NamaProdi ?? '-' }}"
@@ -287,121 +185,73 @@
                         data-detail-divisi="{{ $item->Divisi ?? '-' }}"
                         data-detail-status-terkini="{{ $item->StatusTerkini ?? 'Menunggu' }}"
                         data-detail-status-akhir="{{ $item->StatusAkhir ?? 'Dalam Proses' }}"
+                        data-status-berkas="{{ $item->StatusBerkas ?? '' }}"
+                        data-status-case="{{ $item->study_case?->StatusCase ?? '' }}"
+                        data-status-wawancara="{{ $item->wawancara?->StatusWawancara ?? '' }}"
                         data-detail-date="{{ $item->created_at ? $item->created_at->format('d M Y, H:i') : '-' }}"
-                        data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}"
-                    >
+                        data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}">
                         <!-- TOP CARD -->
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex items-center gap-3 min-w-0">
-                                <div class="w-10 h-10 shrink-0
-                                    rounded-full bg-blue-50
-                                    flex items-center justify-center
-                                    text-brand-blue font-bold text-sm">
+                                <div class="w-10 h-10 shrink-0 rounded-full bg-blue-50 flex items-center justify-center text-brand-blue font-bold text-sm">
                                     {{ strtoupper(substr($item->user?->Nama ?? 'P', 0, 1)) }}
                                 </div>
                                 <div class="min-w-0">
-                                    <p class="font-bold text-brand-navy truncate">
-                                        {{ $item->user?->Nama ?? 'Nama Belum Diisi' }}
-                                    </p>
-                                    <p class="text-[11px] text-slate-400">
-                                        NPM: {{ $item->user?->Npm ?? '-' }}
-                                    </p>
+                                    <p class="font-bold text-brand-navy truncate">{{ $item->user?->Nama ?? 'Nama Belum Diisi' }}</p>
+                                    <p class="text-[11px] text-slate-400">NPM: {{ $item->user?->Npm ?? '-' }}</p>
                                 </div>
                             </div>
 
                             <!-- Arrow -->
-                            <div class="w-8 h-8 shrink-0
-                                rounded-lg border border-slate-200
-                                flex items-center justify-center
-                                text-slate-400">
-                                <svg class="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M9 5l7 7-7 7">
-                                    </path>
+                            <div class="w-8 h-8 shrink-0 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
                             </div>
                         </div>
 
                         <!-- DIVISI -->
                         <div class="mt-3">
-                            <span class="inline-flex items-center
-                                px-2.5 py-1 rounded-lg
-                                text-[11px] font-semibold
-                                bg-blue-50 text-brand-blue
-                                border border-blue-100">
-                                {{ $item->Divisi }}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-blue-50 text-brand-blue border border-blue-100">
+                                {{ $item->Divisi ?? '-' }}
                             </span>
                         </div>
 
                         <!-- INFO UTAMA -->
-                        <div class="grid grid-cols-2 gap-3 mt-4 pt-3
-                            border-t border-slate-100">
+                        <div class="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-slate-100">
                             <div>
-                                <p class="text-[10px] uppercase
-                                    tracking-wide text-slate-400">
-                                    Prodi
-                                </p>
-                                <p class="text-xs font-medium
-                                    text-slate-700 mt-1">
-                                    {{ $item->user?->prodi?->NamaProdi ?? '-' }}
-                                </p>
+                                <p class="text-[10px] uppercase tracking-wide text-slate-400">Prodi</p>
+                                <p class="text-xs font-medium text-slate-700 mt-1">{{ $item->user?->prodi?->NamaProdi ?? '-' }}</p>
                             </div>
                             <div>
 
-                                <p class="text-[10px] uppercase
-                                    tracking-wide text-slate-400">
-                                    Status Berkas
-                                </p>
+                                <p class="text-[10px] uppercase tracking-wide text-slate-400"> Status Berkas</p>
                                 <div class="mt-1">
                                     @if($item->StatusBerkas === 'Lolos')
-                                        <span class="text-[11px] font-semibold text-emerald-600">
-                                            ● Lolos
-                                        </span>
+                                        <span class="text-[11px] font-semibold text-emerald-600">● Lolos</span>
                                     @elseif($item->StatusBerkas === 'Gagal' || $item->StatusBerkas === 'Tidak Lolos')
-                                        <span class="text-[11px] font-semibold text-rose-600">
-                                            ● Gagal
-                                        </span>
+                                        <span class="text-[11px] font-semibold text-rose-600">● Gagal</span>
                                     @else
-                                        <span class="text-[11px] font-semibold text-amber-600">
-                                            ● {{ $item->StatusBerkas ?? 'Menunggu' }}
-                                        </span>
+                                        <span class="text-[11px] font-semibold text-amber-600"> ● {{ $item->StatusBerkas ?? 'Menunggu' }}</span>
                                     @endif
                                 </div>
                             </div>
 
                             <div>
-                                <p class="text-[10px] uppercase
-                                    tracking-wide text-slate-400">
-                                    Status Akhir
-                                </p>
+                                <p class="text-[10px] uppercase tracking-wide text-slate-400">Status Akhir</p>
                                 <p class="text-xs font-medium mt-1">
                                     @if($item->StatusAkhir === 'Lolos')
-                                        <span class="text-emerald-600">
-                                            Lolos Seleksi
-                                        </span>
+                                        <span class="text-emerald-600">Lolos Seleksi</span>
                                     @elseif($item->StatusAkhir === 'Tidak Lolos')
-                                        <span class="text-rose-600">
-                                            Tidak Lolos
-                                        </span>
+                                        <span class="text-rose-600">Tidak Lolos</span>
                                     @else
-                                        <span class="text-slate-400">
-                                            {{ $item->StatusAkhir ?? 'Dalam Proses' }}
-                                        </span>
+                                        <span class="text-slate-400">{{ $item->StatusAkhir ?? 'Dalam Proses' }}</span>
                                     @endif
                                 </p>
                             </div>
 
                             <div>
-                                <p class="text-[10px] uppercase
-                                    tracking-wide text-slate-400">
-                                    Tanggal Daftar
-                                </p>
+                                <p class="text-[10px] uppercase tracking-wide text-slate-400">Tanggal Daftar</p>
                                 <p class="text-xs text-slate-600 mt-1">
                                     {{ $item->created_at ? $item->created_at->format('d M Y') : '-' }}
                                 </p>
@@ -419,234 +269,199 @@
 </div>
 
 <!--  MODAL DETAIL  -->
-
 @include('modals.detail-peserta')
 
 <!--  JAVASCRIPT  -->
-
 <script>
-
 document.addEventListener('DOMContentLoaded', () => {
-
     const searchInput = document.getElementById('peserta-search');
     const divisiFilter = document.getElementById('divisi-filter');
-
     const desktopItems = document.querySelectorAll('.peserta-item');
     const mobileItems = document.querySelectorAll('.peserta-item-mobile');
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | FILTER PESERTA
-    |--------------------------------------------------------------------------
-    */
-
+    //FILTER PESERTA
     function filterPeserta() {
-
         const query = searchInput.value.toLowerCase().trim();
         const divisi = divisiFilter.value;
-
-
         [...desktopItems, ...mobileItems].forEach(item => {
-
             const name = item.dataset.name || '';
             const npm = item.dataset.npm || '';
             const itemDivisi = item.dataset.divisi || '';
-
             const matchSearch =
                 name.includes(query) ||
                 npm.includes(query);
-
             const matchDivisi =
                 !divisi ||
                 itemDivisi === divisi;
-
-
             item.style.display =
                 matchSearch && matchDivisi
                     ? ''
                     : 'none';
-
         });
-
     }
-
-
     searchInput?.addEventListener('input', filterPeserta);
     divisiFilter?.addEventListener('change', filterPeserta);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | MODAL DETAIL
-    |--------------------------------------------------------------------------
-    */
-
-    const modal = document.getElementById('detail-peserta-modal');
-
+    
+    // MODAL DETAIL
+    const modal = document.getElementById('detail-peserta');
     const modalName = document.getElementById('detail-name');
     const modalNpm = document.getElementById('detail-npm');
     const modalProdi = document.getElementById('detail-prodi');
     const modalAngkatan = document.getElementById('detail-angkatan');
     const modalDivisi = document.getElementById('detail-divisi');
-    const modalStatusBerkas = document.getElementById('detail-status-berkas');
+    const modalStatusTerkini = document.getElementById('detail-status-terkini');
     const modalStatusAkhir = document.getElementById('detail-status-akhir');
+    const modalStatusBerkas = document.getElementById('detail-status-berkas');
+    const modalStatusCase = document.getElementById('detail-status-case');
+    const modalStatusWawancara = document.getElementById('detail-status-wawancara');
     const modalTanggal = document.getElementById('detail-tanggal');
     const modalCv = document.getElementById('detail-cv');
 
-
+    function formatStatus(status) {
+        status = (status || '').toLowerCase().trim();
+        if (status === 'lolos') {
+            return 'Lolos';
+        }
+        if (
+            status === 'tidak_lolos' ||
+            status === 'tidak lolos' ||
+            status === 'gagal'
+        ) {
+            return 'Tidak Lolos';
+        }
+        return 'Belum Diproses';
+    }
     function openDetail(element) {
+        window.currentPesertaId =
+            element.dataset.detailId;
+
+        window.currentPesertaNama =
+            element.dataset.detailName;
+
+        window.currentTahap =
+            element.dataset.tahapAktif;
 
         modalName.textContent =
             element.dataset.detailName || '-';
-
         modalNpm.textContent =
             element.dataset.detailNpm || '-';
-
         modalProdi.textContent =
             element.dataset.detailProdi || '-';
-
         modalAngkatan.textContent =
             element.dataset.detailAngkatan || '-';
-
         modalDivisi.textContent =
             element.dataset.detailDivisi || '-';
-
-        modalStatusBerkas.textContent =
-            element.dataset.detailStatusBerkas || 'Menunggu';
-
+        modalStatusTerkini.textContent =
+            element.dataset.detailStatusTerkini || 'Seleksi Berkas';
         modalStatusAkhir.textContent =
             element.dataset.detailStatusAkhir || 'Dalam Proses';
-
+        const statusBerkas =
+            element.dataset.detaiStatusBerkas || '';
+        const statusCase =
+            element.dataset.detailStatusCase || '';
+        const statusWawancara =
+            element.dataset.detailStatusWawancara || '';
+        modalStatusBerkas.textContent =
+            formatStatus(statusBerkas);
+        modalStatusCase.textContent =
+            formatStatus(statusCase);
+        modalStatusWawancara.textContent =
+            formatStatus(statusWawancara);
         modalTanggal.textContent =
             element.dataset.detailDate || '-';
 
-
-        /*
-        | CV
-        */
-
+            // CV
         if (element.dataset.detailCv) {
-
             modalCv.href =
                 element.dataset.detailCv;
-
             modalCv.classList.remove('hidden');
-
         } else {
-
             modalCv.classList.add('hidden');
-
         }
-
-
         modal.classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
-
     }
-
+    
+    function openStatusModal() {
+        const pesertaId =
+            window.currentPesertaId;
+        const tahap =
+            window.currentTahap;
+        const nama =
+            window.currentPesertaNama;
+        if (!pesertaId || !tahap) {
+            return;
+        }
+        // Nama peserta
+        statusPeserta.textContent = nama || '-';
+        // Nama tahap
+        let namaTahap = '-';
+        if (tahap === 'berkas') {
+            namaTahap = 'Seleksi Berkas';
+        } else if (tahap === 'study_case') {
+            namaTahap = 'Study Case';
+        } else if (tahap === 'wawancara') {
+            namaTahap = 'Wawancara';
+        }
+        statusTahap.textContent = namaTahap;
+        // Masukkan tahap ke form
+        statusTahapInput.value = tahap;
+        // Tentukan URL form
+        statusForm.action =
+            `/admin/peserta/${pesertaId}/status`;
+        // Buka modal
+        statusModal.classList.remove('hidden');
+        statusModal.classList.add('flex');
+    }
 
     function closeDetail() {
-
         modal.classList.add('hidden');
         document.body.classList.remove('overflow-hidden');
-
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | DESKTOP BUTTON
-    |--------------------------------------------------------------------------
-    */
-
+    // DESKTOP BUTTON
     document.querySelectorAll('.btn-detail')
         .forEach(button => {
-
             button.addEventListener('click', (event) => {
-
                 event.stopPropagation();
-
                 const item =
                     button.closest('.peserta-item');
-
                 openDetail(item);
-
             });
-
         });
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | MOBILE CARD
-    |--------------------------------------------------------------------------
-    */
-
+    // MOBILE CARD
     document.querySelectorAll('.peserta-item-mobile')
         .forEach(card => {
-
             card.addEventListener('click', () => {
-
                 openDetail(card);
-
             });
-
         });
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | CLOSE MODAL
-    |--------------------------------------------------------------------------
-    */
-
+    // CLOSE MODAL
     document
         .getElementById('close-detail-modal')
         ?.addEventListener('click', closeDetail);
-
-
     document
         .getElementById('close-detail-button')
         ?.addEventListener('click', closeDetail);
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | CLICK BACKDROP
-    |--------------------------------------------------------------------------
-    */
-
+    // CLICK BACKDROP
     modal?.addEventListener('click', (event) => {
-
         if (event.target === modal) {
-
             closeDetail();
-
         }
-
     });
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | ESC KEY
-    |--------------------------------------------------------------------------
-    */
-
+    // ESC KEY
     document.addEventListener('keydown', (event) => {
-
         if (
             event.key === 'Escape' &&
             !modal.classList.contains('hidden')
         ) {
-
             closeDetail();
-
         }
-
     });
-
 });
 
 </script>

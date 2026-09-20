@@ -47,42 +47,229 @@ class AdminController extends Controller
             'wawancara.jadwal_sesi'
         ])->latest()->get();
 
+        $sekarang = \Carbon\Carbon::now();
+
         foreach ($pendaftaran as $item) {
 
-            $statusCase = $item->study_case?->StatusCase;
-            $statusWawancara = $item->wawancara?->StatusWawancara;
+            $statusBerkas = strtolower($item->StatusBerkas ?? '');
+            $statusCase = strtolower($item->study_case?->StatusCase ?? '');
+            $statusWawancara = strtolower($item->wawancara?->StatusWawancara ?? '');
 
-            if ($item->StatusBerkas === 'pending') {
-
+            if ($statusBerkas !== 'lolos') {
                 $item->statusTerkini = 'Seleksi Berkas';
-
-            } elseif (
-                $item->StatusBerkas === 'lolos' &&
-                $statusCase !== 'lolos'
-            ) {
-
+                $item->tahapAktif = 'berkas';
+            } elseif ($statusCase !== 'lolos') {
                 $item->statusTerkini = 'Study Case';
-
-            } elseif (
-                $statusCase === 'lolos' &&
-                $statusWawancara !== 'lolos'
-            ) {
-
+                $item->tahapAktif = 'study_case';
+            } elseif ($statusWawancara !== 'lolos') {
                 $item->statusTerkini = 'Wawancara';
-
-            } elseif ($statusWawancara === 'lolos') {
-
-                $item->statusTerkini = 'Menunggu Pengumuman';
-
+                $item->tahapAktif = 'wawancara';
             } else {
-
-                $item->statusTerkini = 'Seleksi Berkas';
+                $item->statusTerkini = 'Menunggu Pengumuman';
+                $item->tahapAktif = null;
             }
+        
+            $item->bolehKelolaStatus = false;
+
+            // seleksi berkas
+            if ($item->tahapAktif === 'berkas') {
+                $jadwal = JadwalSesi::where('NamaSesi', 'Berkas')
+                    ->orderBy('TanggalSelesai', 'desc')
+                    ->first();
+                if ($jadwal && $sekarang->greaterThan(
+                    \Carbon\Carbon::parse($jadwal->TanggalSelesai)->endOfDay()
+                )) {
+
+                    $item->bolehKelolaStatus = true;
+                }
+            }
+
+            // study case
+            elseif ($item->tahapAktif === 'study_case') {
+                $jadwal = $item->study_case?->jadwal_sesi;
+                if ($jadwal && $sekarang->greaterThan(
+                    \Carbon\Carbon::parse($jadwal->TanggalSelesai)->endOfDay()
+                )) {
+                    $item->bolehKelolaStatus = true;
+                }
+            }
+
+            // wawancara
+            elseif ($item->tahapAktif === 'wawancara') {
+                $jadwal = $item->wawancara?->jadwal_sesi;
+                if ($jadwal && $sekarang->greaterThan(
+                    \Carbon\Carbon::parse($jadwal->TanggalSelesai)->endOfDay()
+                )) {
+                    $item->bolehKelolaStatus = true;
+                }
+            }
+
+            $jadwalSesi = JadwalSesi::orderBy('TanggalMulai', 'asc')->get();
+
+            return view('admin.peserta', compact('pendaftaran'));
+        }
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $pendaftaran = Pendaftaran::with([
+            'study_case.jadwal_sesi',
+            'wawancara.jadwal_sesi'
+        ])->findOrFail($id);
+
+        $tahap = $request->input('tahap');
+        $hasil = $request->input('hasil');
+
+        // Validasi hasil
+        if (!in_array($hasil, ['lolos', 'tidak_lolos'])) {
+            return back()->with('error', 'Hasil seleksi tidak valid.');
         }
 
-        $jadwalSesi = JadwalSesi::orderBy('TanggalMulai', 'asc')->get();
+        $sekarang = \Carbon\Carbon::now();
 
-        return view('admin.peserta', compact('pendaftaran'));
+        // Berkas
+        if ($tahap == 'berkas') {
+            if (strtolower($pendaftaran->StatusBerkas ?? '') === 'lolos') {
+                return back()->with(
+                    'error', 'Status seleksi berkas yang sudah lolos tidak dapat diubah'
+                );
+            }
+
+            // Cari jadwal berkas
+            $jadwalBerkas = JadwalSesi::where('NamaSesi', 'Berkas')->orderBy('TanggalSelesai', 'desc')->first();
+
+            if (!$jadwalBerkas) {
+                return back()->with(
+                    'error', 'Jadwal seleksi berkas belum tersedia.'
+                );
+            }
+
+            // cek seleksi selesai
+            $tanggalSelesai = \Carbon\Carbon::perse(
+                $jadwalBerkas->TanggalSelesai
+            )->endOfDay();
+
+            if ($sekarang->lessThan($tanggalSelesai)) {
+                return back()->with('error', 'Seleksi berkas belum selesai.');
+            }
+
+            $pendaftaran->StatusBerkas = $hasil;
+            $pendaftaran->save();
+
+            return back()->with(
+                'success', 'Status seleksi berkas berhasil diperbarui.'
+            );
+        }
+
+        // Study Case
+        if ($tahap === 'study_case') {
+            // Berkas harus sudah lolos
+            if (strtolower($pendaftaran->StatusBerkas ?? '') !== 'lolos') {
+                return back()->with(
+                    'error', 'Study Case belum dapat diproses karena seleksi berkas belum Lolos.'
+                );
+            }
+            // Harus sudah ada data Study Case
+            if (!$pendaftaran->study_case) {
+                return back()->with(
+                    'error', 'Data Study Case peserta belum tersedia.'
+                );
+            }
+
+            // Tidak boleh mengubah jika sudah lolos
+            if (strtolower($pendaftaran->study_case->StatusCase ?? '') === 'lolos') {
+                return back()->with(
+                    'error', 'Status Study Case yang sudah Lolos tidak dapat diubah.'
+                );
+            }
+
+            $jadwalStudyCase = $pendaftaran->study_case->jadwal_sesi;
+            if(!$jadwalStudyCase) {
+                return back()->with(
+                    'error', 'Jadwal study case peserta belum tersedia.'
+                );
+            }
+
+            $tanggalSelesai = \Carbon\Carbon::parse(
+                $jadwalStudyCase->TanggalSelesai
+            )->endOfDay();
+
+            if ($sekarang->lessThan($tanggalSelesai)) {
+                return back()->with(
+                    'error',
+                    'Study Case belum selesai.'
+                );
+            }
+
+            $pendaftaran->study_case->StatusCase = $hasil;
+            $pendaftaran->study_case->save();
+
+            return back()->with(
+                'success', 'Status Study Case berhasil diperbarui.'
+            );
+        }
+
+        // Wawancara
+        if ($tahap === 'wawancara') {
+
+            // Berkas harus lolos
+            if (strtolower($pendaftaran->StatusBerkas ?? '') !== 'lolos') {
+                return back()->with(
+                    'error', 'Wawancara belum dapat diproses.'
+                );
+            }
+
+            // Study Case harus lolos
+            if (strtolower($pendaftaran->study_case?->StatusCase ?? '') !== 'lolos') {
+                return back()->with(
+                    'error', 'Wawancara belum dapat diproses karena Study Case belum Lolos.'
+                );
+            }
+
+            // Harus ada data wawancara
+            if (!$pendaftaran->wawancara) {
+                return back()->with(
+                    'error', 'Data wawancara peserta belum tersedia.'
+                );
+            }
+
+            // Tidak boleh mengubah jika sudah lolos
+            if (strtolower($pendaftaran->wawancara->StatusWawancara ?? '') === 'lolos') {
+                return back()->with(
+                    'error',
+                    'Status Wawancara yang sudah Lolos tidak dapat diubah.'
+                );
+            }
+
+            $jadwalWawancara = $pendaftaran->wawancara->jadwal_sesi;
+            if (!$jadwalWawancara) {
+                return back()->with(
+                    'error',
+                    'Jadwal Wawancara peserta belum tersedia.'
+                );
+            }
+
+            // Cek tanggal selesai
+            $tanggalSelesai = \Carbon\Carbon::parse(
+                $jadwalWawancara->TanggalSelesai
+            )->endOfDay();
+
+            if ($sekarang->lessThan($tanggalSelesai)) {
+                return back()->with(
+                    'error',
+                    'Wawancara belum selesai.'
+                );
+            }
+
+            $pendaftaran->wawancara->StatusWawancara = $hasil;
+            $pendaftaran->wawancara->save();
+
+            return back()->with(
+                'success', 'Status Wawancara berhasil diperbarui.'
+            );
+        }
+
+        return back()->with('error', 'Tahapan seleksi tidak valid.');
     }
 
     public function jadwal()
