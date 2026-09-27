@@ -1,67 +1,34 @@
 @extends('layouts.app-user')
 
+@section('title', 'Dashboard Seleksi | ILBBEC')
+
 @section('content')
-
-    @php
-        $sekarang = \Carbon\Carbon::now();
-
-        // 1. Relasi & Data Pendaftaran
-        $tglPendaftaran = $pendaftaran ? $pendaftaran->created_at : null;
-        $hasPendaftaran = !is_null($pendaftaran);
-
-        $studyCase = optional($pendaftaran)->study_case;
-        $jadwalSC = optional($studyCase)->jadwal_sesi;
-
-        $wawancara = optional($pendaftaran)->wawancara;
-        $jadwalWwn = optional($wawancara)->jadwal_sesi;
-
-        // 2. Parse Tanggal Langsung dari Database
-        $tglSC = ($jadwalSC && $jadwalSC->TanggalSesi) ? \Carbon\Carbon::parse($jadwalSC->TanggalSesi) : null;
-        $tglWwn = ($jadwalWwn && $jadwalWwn->TanggalSesi) ? \Carbon\Carbon::parse($jadwalWwn->TanggalSesi) : null;
-
-        // 3. Logika Kondisional H-3 & Keaktifan Sesi
-        $bukaSC = $tglSC && $sekarang->copy()->addDays(5)->greaterThanOrEqualTo($tglSC);
-        $aktifSC = $tglSC && $sekarang->greaterThanOrEqualTo($tglSC);
-
-        $bukaWwn = $tglWwn && $sekarang->copy()->addDays(5)->greaterThanOrEqualTo($tglWwn);
-        $aktifWwn = $tglWwn && $sekarang->greaterThanOrEqualTo($tglWwn);
-
-        // 4. Status Penyelesaian Tiap Tahap
-        $selesaiBerkas = $hasPendaftaran;
-        $selesaiSC = $studyCase && (!is_null($studyCase->NilaiKasus) || in_array($studyCase->StatusKasus, ['Selesai', 'Lolos']));
-        $selesaiWwn = $wawancara && (!is_null($wawancara->NilaiWawancara) || in_array($wawancara->StatusWawancara, ['Selesai', 'Lolos']));
-        $selesaiPengumuman = $pendaftaran && !is_null($pendaftaran->StatusAkhir) && $pendaftaran->StatusAkhir !== 'Menunggu';
-        $aktifPengumuman = $pendaftaran && !is_null($pendaftaran->StatusAkhir);
-
-        // Hitung Progres Garis Horizontal Timeline (0% s/d 75%)
-        if ($selesaiPengumuman) {
-            $progressWidth = '75%';
-        } elseif ($selesaiWwn || $aktifWwn) {
-            $progressWidth = '50%';
-        } elseif ($selesaiSC || $aktifSC) {
-            $progressWidth = '25%';
-        } elseif ($selesaiBerkas) {
-            $progressWidth = '12.5%';
-        } else {
-            $progressWidth = '0%';
-        }
-    @endphp
 
     <!-- KONTEN UTAMA (Dashboard Timeline) -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 md:pt-14 pb-24 md:pb-16">
         
         <!-- Flash Alert Messages -->
         @if (session('success'))
-            <div class="mb-8 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/90 px-5 py-4 text-sm text-emerald-800 shadow-sm">
-                <svg class="h-5 w-5 shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="font-medium">{{ session('success') }}</span>
+            <div class="mb-8 flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50/90 px-5 py-4 text-sm text-emerald-800 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <svg class="h-5 w-5 shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="font-medium">{{ session('success') }}</span>
+                </div>
+                <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 font-bold text-lg">
+                    &times;
+                </button>
             </div>
         @endif
 
         @if (session('error'))
-            <div class="mb-8 flex items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50/90 px-5 py-4 text-sm text-rose-800 shadow-sm">
-                <svg class="h-5 w-5 shrink-0 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="font-medium">{{ session('error') }}</span>
+            <div class="mb-8 flex items-center justify-between rounded-2xl border border-rose-200 bg-rose-50/90 px-5 py-4 text-sm text-rose-800 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <svg class="h-5 w-5 shrink-0 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="font-medium">{{ session('error') }}</span>
+                </div>
+                <button type="button" onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-700 font-bold text-lg">
+                    &times;
+                </button>
             </div>
         @endif
 
@@ -71,7 +38,7 @@
                 Halo, {{ $user->Nama ?? 'Calon Anggota' }}
             </h2>
             <p class="text-slate-500 mt-2.5 text-sm md:text-base">
-                Pantau seluruh rangkaian dan progres tahapan seleksi ILBBEC di bawah ini.
+                Pantau seluruh rangkaian dan tentukan jadwal seleksi yang sesuai dengan ketersediaan Anda.
             </p>
         </div>
 
@@ -116,7 +83,7 @@
                         <!-- TAHAP 2: STUDY CASE -->
                         <div class="flex flex-col items-center text-center">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-all border-4 border-white
-                                {{ $selesaiSC ? 'bg-brand-blue text-white ring-4 ring-blue-50' : ($aktifSC ? 'bg-brand-blue text-white ring-4 ring-blue-100 animate-pulse' : ($jadwalSC ? 'bg-slate-100 text-slate-700 border-2 border-slate-300' : 'bg-slate-100 text-slate-400 border-2 border-slate-200')) }}">
+                                {{ $selesaiSC ? 'bg-brand-blue text-white ring-4 ring-blue-50' : ($selectedJadwalSC ? 'bg-brand-blue text-white ring-4 ring-blue-100' : ($lolosBerkas ? 'bg-blue-100 text-brand-blue ring-4 ring-blue-50 animate-pulse' : 'bg-slate-100 text-slate-400 border-2 border-slate-200')) }}">
                                 @if($selesaiSC)
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                 @else
@@ -130,10 +97,10 @@
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                         Selesai
                                     </span>
-                                @elseif($aktifSC)
-                                    <span class="inline-block text-[11px] font-semibold text-brand-blue mt-0.5">Sedang Berlangsung</span>
-                                @elseif($jadwalSC)
-                                    <span class="inline-block text-[11px] font-medium text-slate-500 mt-0.5">Dijadwalkan</span>
+                                @elseif($selectedJadwalSC)
+                                    <span class="inline-block text-[11px] font-semibold text-brand-blue mt-0.5">Jadwal Dipilih</span>
+                                @elseif($lolosBerkas)
+                                    <span class="inline-block text-[11px] font-semibold text-amber-600 mt-0.5">Pilih Jadwal</span>
                                 @else
                                     <span class="inline-block text-[11px] font-medium text-slate-400 mt-0.5">Menunggu</span>
                                 @endif
@@ -143,7 +110,7 @@
                         <!-- TAHAP 3: WAWANCARA -->
                         <div class="flex flex-col items-center text-center">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-all border-4 border-white
-                                {{ $selesaiWwn ? 'bg-brand-blue text-white ring-4 ring-blue-50' : ($aktifWwn ? 'bg-brand-blue text-white ring-4 ring-blue-100 animate-pulse' : ($jadwalWwn ? 'bg-slate-100 text-slate-700 border-2 border-slate-300' : 'bg-slate-100 text-slate-400 border-2 border-slate-200')) }}">
+                                {{ $selesaiWwn ? 'bg-brand-blue text-white ring-4 ring-blue-50' : ($selectedJadwalWwn ? 'bg-brand-blue text-white ring-4 ring-blue-100' : ($lolosSC ? 'bg-blue-100 text-brand-blue ring-4 ring-blue-50 animate-pulse' : 'bg-slate-100 text-slate-400 border-2 border-slate-200')) }}">
                                 @if($selesaiWwn)
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                 @else
@@ -157,10 +124,10 @@
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                         Selesai
                                     </span>
-                                @elseif($aktifWwn)
-                                    <span class="inline-block text-[11px] font-semibold text-brand-blue mt-0.5">Sedang Berlangsung</span>
-                                @elseif($jadwalWwn)
-                                    <span class="inline-block text-[11px] font-medium text-slate-500 mt-0.5">Dijadwalkan</span>
+                                @elseif($selectedJadwalWwn)
+                                    <span class="inline-block text-[11px] font-semibold text-brand-blue mt-0.5">Jadwal Dipilih</span>
+                                @elseif($lolosSC)
+                                    <span class="inline-block text-[11px] font-semibold text-amber-600 mt-0.5">Pilih Jadwal</span>
                                 @else
                                     <span class="inline-block text-[11px] font-medium text-slate-400 mt-0.5">Menunggu</span>
                                 @endif
@@ -223,7 +190,7 @@
 
                 <div class="space-y-3 text-sm text-slate-600 mb-6 flex-grow font-medium">
                     <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                        <span class="text-slate-400 text-xs">Tanggal</span>
+                        <span class="text-slate-400 text-xs">Tanggal Submit</span>
                         <span class="font-semibold text-slate-700">{{ $pendaftaran ? $pendaftaran->created_at->format('d M Y') : '-' }}</span>
                     </div>
                     <div class="flex items-center justify-between py-1 border-b border-slate-50">
@@ -232,7 +199,7 @@
                     </div>
                     <div class="flex items-center justify-between py-1 border-b border-slate-50">
                         <span class="text-slate-400 text-xs">Status Berkas</span>
-                        <span class="font-semibold {{ ($pendaftaran && $pendaftaran->StatusBerkas === 'Lolos') ? 'text-emerald-600' : 'text-slate-700' }}">
+                        <span class="font-semibold {{ ($pendaftaran && $pendaftaran->StatusBerkas === 'Lolos') ? 'text-emerald-600' : ($pendaftaran && in_array($pendaftaran->StatusBerkas, ['Tidak Lolos', 'Gagal']) ? 'text-rose-600' : 'text-slate-700') }}">
                             {{ $pendaftaran ? ($pendaftaran->StatusBerkas ?? 'Menunggu') : 'Belum Submit' }}
                         </span>
                     </div>
@@ -240,6 +207,12 @@
                     <div class="flex items-center justify-between py-1">
                         <span class="text-slate-400 text-xs">Divisi Pilihan</span>
                         <span class="font-semibold text-brand-navy text-xs px-2 py-0.5 bg-blue-50 rounded">{{ $pendaftaran->Divisi }}</span>
+                    </div>
+                    @endif
+                    @if($pendaftaran && $pendaftaran->Divisi2)
+                    <div class="flex items-center justify-between py-1">
+                        <span class="text-slate-400 text-xs">Divisi Pilihan 2</span>
+                        <span class="font-semibold text-brand-navy text-xs px-2 py-0.5 bg-blue-50 rounded">{{ $pendaftaran->Divisi2 }}</span>
                     </div>
                     @endif
                 </div>
@@ -268,18 +241,18 @@
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                             Selesai
                         </span>
-                    @elseif($jadwalSC && $jadwalSC->IsActive)
+                    @elseif($selectedJadwalSC)
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-brand-blue border border-blue-200">
                             <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
-                            Aktif
+                            Dikonfirmasi
                         </span>
-                    @elseif($jadwalSC)
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                            Dijadwalkan
+                    @elseif($lolosBerkas)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                            Pilih Jadwal
                         </span>
                     @else
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-500 border border-slate-200">
-                            Belum Ada Jadwal
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-400 border border-slate-200">
+                            Belum Terbuka
                         </span>
                     @endif
                 </div>
@@ -287,37 +260,71 @@
                 <h3 class="text-lg font-bold text-brand-navy mb-4">Study Case</h3>
 
                 <div class="space-y-3 text-sm text-slate-600 mb-6 flex-grow font-medium">
-                    @if($jadwalSC && $bukaSC)
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Tanggal</span>
-                            <span class="font-semibold text-slate-700">{{ $tglSC->format('d M Y') }}</span>
+                    @if($selectedJadwalSC)
+                        <!-- Tampilan Jika Sudah Memilih Jadwal -->
+                        <div class="p-3 bg-blue-50/60 rounded-xl border border-blue-100 mb-2">
+                            <div class="flex items-center gap-1.5 text-xs font-bold text-brand-blue uppercase tracking-wide mb-2">
+                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                Jadwal Anda
+                            </div>
+                            <div class="space-y-1.5 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Tanggal:</span>
+                                    <span class="font-bold text-brand-navy">{{ \Carbon\Carbon::parse($selectedJadwalSC->TanggalMulai)->format('d F Y') }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Waktu Mulai:</span>
+                                    <span class="font-bold text-brand-navy">{{ \Carbon\Carbon::parse($selectedJadwalSC->Jam)->format('H:i') }} WIB</span>
+                                </div>
+                                @if(!empty($selectedJadwalSC->Lokasi))
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Lokasi / Ruang:</span>
+                                    <span class="font-bold text-brand-navy">{{ $selectedJadwalSC->Lokasi }}</span>
+                                </div>
+                                @endif
+                                @if(!empty($selectedJadwalSC->keterangan))
+                                <div class="text-[11px] text-slate-500 pt-1 border-t border-blue-100">
+                                    Info: {{ $selectedJadwalSC->keterangan }}
+                                </div>
+                                @endif
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Waktu</span>
-                            <span class="font-semibold text-slate-700">{{ \Carbon\Carbon::parse($jadwalSC->WaktuMulai)->format('H:i') }} WIB</span>
+                    @elseif($lolosBerkas)
+                        <!-- Belum Memilih Jadwal -->
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-600 leading-relaxed">
+                            <p class="font-semibold text-brand-navy mb-1">Silakan pilih waktu yang sesuai dengan ketersediaan Anda.</p>
+                            <p class="text-slate-500 text-[11px]">Pilih salah satu jadwal yang telah disediakan admin di bawah.</p>
                         </div>
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Ruangan / Sesi</span>
-                            <span class="font-semibold text-slate-700">{{ $studyCase->Lokasi ?? ('Sesi ID: ' . $jadwalSC->SesiId) }}</span>
+                    @else
+                        <!-- Belum Lolos Berkas -->
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed">
+                            Jadwal Study Case akan dapat dipilih setelah Anda dinyatakan <strong>Lolos</strong> pada tahap Seleksi Berkas.
                         </div>
-                        @if($studyCase && $studyCase->Kelompok)
-                        <div class="flex items-center justify-between py-1">
-                            <span class="text-slate-400 text-xs">Kelompok</span>
-                            <span class="font-semibold text-brand-navy text-xs px-2 py-0.5 bg-blue-50 rounded">{{ $studyCase->Kelompok }}</span>
-                        </div>
+                    @endif
+                </div>
+
+                <div class="mt-auto pt-2">
+                    @if($lolosBerkas)
+                        @if($selectedJadwalSC)
+                            <!-- <button type="button" 
+                                    data-modal-open="modal-pilih-sc" 
+                                    class="w-full flex items-center justify-center gap-2 bg-white border border-blue-200 hover:bg-blue-50 text-brand-blue font-semibold py-2.5 px-4 rounded-xl text-sm transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                Ubah Jadwal
+                            </button> -->
+                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Anda Sudah Terdaftar</span>
+                        @else
+                            <button type="button" 
+                                    data-modal-open="modal-pilih-sc" 
+                                    class="w-full flex items-center justify-center gap-2 bg-brand-blue hover:bg-blue-800 text-white font-semibold py-2.5 px-4 rounded-xl text-sm shadow-sm transition hover:shadow-md">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                Pilih Jadwal
+                            </button>
                         @endif
                     @else
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Tanggal</span>
-                            <span class="font-semibold text-slate-700">{{ ($jadwalSC && $tglSC) ? $tglSC->format('d M Y') : '-' }}</span>
-                        </div>
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Waktu</span>
-                            <span class="text-slate-400 italic text-xs">Terkunci (H-3)</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed italic">
-                            Detail waktu & ruangan baru akan dibuka secara otomatis pada H-3 dari jadwal sesi.
-                        </div>
+                        <button disabled class="w-full flex items-center justify-center gap-2 bg-slate-100 text-slate-400 font-semibold py-2.5 px-4 rounded-xl text-sm cursor-not-allowed">
+                            Terkunci
+                        </button>
                     @endif
                 </div>
             </div>
@@ -331,18 +338,18 @@
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                             Selesai
                         </span>
-                    @elseif($jadwalWwn && $jadwalWwn->IsActive)
+                    @elseif($selectedJadwalWwn)
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-brand-blue border border-blue-200">
                             <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
-                            Aktif
+                            Dikonfirmasi
                         </span>
-                    @elseif($jadwalWwn)
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                            Dijadwalkan
+                    @elseif($lolosSC)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                            Pilih Jadwal
                         </span>
                     @else
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-500 border border-slate-200">
-                            Belum Ada Jadwal
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-400 border border-slate-200">
+                            Belum Terbuka
                         </span>
                     @endif
                 </div>
@@ -350,31 +357,70 @@
                 <h3 class="text-lg font-bold text-brand-navy mb-4">Wawancara</h3>
 
                 <div class="space-y-3 text-sm text-slate-600 mb-6 flex-grow font-medium">
-                    @if($jadwalWwn && $bukaWwn)
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Tanggal</span>
-                            <span class="font-semibold text-slate-700">{{ $tglWwn->format('d M Y') }}</span>
+                    @if($selectedJadwalWwn)
+                        <!-- Tampilan Jika Sudah Memilih Jadwal Wawancara -->
+                        <div class="p-3 bg-blue-50/60 rounded-xl border border-blue-100 mb-2">
+                            <div class="flex items-center gap-1.5 text-xs font-bold text-brand-blue uppercase tracking-wide mb-2">
+                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                Jadwal Anda
+                            </div>
+                            <div class="space-y-1.5 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Tanggal:</span>
+                                    <span class="font-bold text-brand-navy">{{ \Carbon\Carbon::parse($selectedJadwalWwn->TanggalMulai)->format('d F Y') }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Waktu Mulai:</span>
+                                    <span class="font-bold text-brand-navy">{{ \Carbon\Carbon::parse($selectedJadwalWwn->Jam)->format('H:i') }} WIB</span>
+                                </div>
+                                @if(!empty($selectedJadwalWwn->Lokasi))
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Lokasi / Ruang:</span>
+                                    <span class="font-bold text-brand-navy">{{ $selectedJadwalWwn->Lokasi }}</span>
+                                </div>
+                                @endif
+                                @if(!empty($selectedJadwalWwn->keterangan))
+                                <div class="text-[11px] text-slate-500 pt-1 border-t border-blue-100">
+                                    Info: {{ $selectedJadwalWwn->keterangan }}
+                                </div>
+                                @endif
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Waktu</span>
-                            <span class="font-semibold text-slate-700">{{ \Carbon\Carbon::parse($jadwalWwn->WaktuMulai)->format('H:i') }} WIB</span>
-                        </div>
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Ruangan / Lokasi</span>
-                            <span class="font-semibold text-slate-700">{{ $wawancara->Lokasi ?? ('Sesi ID: ' . $jadwalWwn->SesiId) }}</span>
+                    @elseif($lolosSC)
+                        <!-- Belum Memilih Jadwal Wawancara -->
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-600 leading-relaxed">
+                            <p class="font-semibold text-brand-navy mb-1">Silakan pilih waktu yang sesuai dengan ketersediaan Anda.</p>
+                            <p class="text-slate-500 text-[11px]">Pilih salah satu jadwal wawancara yang telah disediakan admin.</p>
                         </div>
                     @else
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Tanggal</span>
-                            <span class="font-semibold text-slate-700">{{ ($jadwalWwn && $tglWwn) ? $tglWwn->format('d M Y') : '-' }}</span>
+                        <!-- Belum Lolos Study Case -->
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed">
+                            Jadwal Wawancara akan dapat dipilih setelah Anda dinyatakan <strong>Lolos</strong> pada tahap Study Case.
                         </div>
-                        <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                            <span class="text-slate-400 text-xs">Waktu</span>
-                            <span class="text-slate-400 italic text-xs">Terkunci (H-3)</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed italic">
-                            Detail waktu & ruangan wawancara baru akan dibuka secara otomatis pada H-3 dari jadwal sesi.
-                        </div>
+                    @endif
+                </div>
+
+                <div class="mt-auto pt-2">
+                    @if($lolosSC)
+                        @if($selectedJadwalWwn)
+                            <button type="button" 
+                                    data-modal-open="modal-pilih-wwn" 
+                                    class="w-full flex items-center justify-center gap-2 bg-white border border-blue-200 hover:bg-blue-50 text-brand-blue font-semibold py-2.5 px-4 rounded-xl text-sm transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                Ubah Jadwal
+                            </button>
+                        @else
+                            <button type="button" 
+                                    data-modal-open="modal-pilih-wwn" 
+                                    class="w-full flex items-center justify-center gap-2 bg-brand-blue hover:bg-blue-800 text-white font-semibold py-2.5 px-4 rounded-xl text-sm shadow-sm transition hover:shadow-md">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                Pilih Jadwal
+                            </button>
+                        @endif
+                    @else
+                        <button disabled class="w-full flex items-center justify-center gap-2 bg-slate-100 text-slate-400 font-semibold py-2.5 px-4 rounded-xl text-sm cursor-not-allowed">
+                            Terkunci
+                        </button>
                     @endif
                 </div>
             </div>
@@ -431,7 +477,190 @@
 
         </div>
 
+        <!-- ======================================================== -->
+        <!-- MODAL PILIH JADWAL: STUDY CASE                           -->
+        <!-- ======================================================== -->
+        <div id="modal-pilih-sc" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto" role="dialog" aria-modal="true">
+            <div class="w-full max-w-lg rounded-3xl bg-white shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
+                <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/70">
+                    <div>
+                        <h3 class="text-base font-bold text-brand-navy">Pilih Jadwal Study Case</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Pilih salah satu jadwal yang sesuai dengan ketersediaan Anda.</p>
+                    </div>
+                    <button type="button" data-modal-close="modal-pilih-sc" class="rounded-xl p-1.5 text-slate-400 hover:bg-slate-100">✕</button>
+                </div>
+                
+                <form action="{{ route('user.jadwal.pilih') }}" method="POST" class="p-6">
+                    @csrf
+                    <div class="space-y-3 mb-6">
+                        @forelse($availableJadwalSC as $sesi)
+                            @php
+                                $isSelected = $selectedJadwalSC && $selectedJadwalSC->SesiId === $sesi->SesiId;
+                            @endphp
+                            <label class="flex items-start gap-3.5 p-4 rounded-2xl border transition cursor-pointer hover:border-brand-blue hover:bg-blue-50/40 {{ $isSelected ? 'border-brand-blue bg-blue-50/50 ring-2 ring-blue-200' : 'border-slate-200 bg-white' }}">
+                                <input type="radio" 
+                                       name="SesiId" 
+                                       value="{{ $sesi->SesiId }}" 
+                                       class="mt-1 h-4 w-4 text-brand-blue focus:ring-brand-blue border-slate-300"
+                                       {{ $isSelected ? 'checked' : '' }}
+                                       required>
+                                <div class="flex-1 text-xs">
+                                    <div class="flex items-center justify-between gap-2 mb-1">
+                                        <span class="font-bold text-sm text-brand-navy">
+                                            {{ \Carbon\Carbon::parse($sesi->TanggalMulai)->format('d F Y') }}
+                                        </span>
+                                        <span class="px-2 py-0.5 rounded-md bg-blue-100/70 text-brand-blue font-bold text-[11px]">
+                                            {{ \Carbon\Carbon::parse($sesi->Jam)->format('H:i') }} WIB
+                                        </span>
+                                    </div>
+                                    @if(!empty($sesi->Lokasi))
+                                        <p class="text-slate-600 font-medium flex items-center gap-1.5 mt-1">
+                                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                                            {{ $sesi->Lokasi }}
+                                        </p>
+                                    @endif
+                                    @if(!empty($sesi->keterangan))
+                                        <p class="text-slate-400 text-[11px] mt-1">{{ $sesi->keterangan }}</p>
+                                    @endif
+                                </div>
+                            </label>
+                        @empty
+                            <div class="py-8 text-center text-xs text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                                <svg class="w-8 h-8 mx-auto text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                Belum ada jadwal yang tersedia.
+                            </div>
+                        @endforelse
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-3 border-t border-slate-100">
+                        <button type="button" data-modal-close="modal-pilih-sc" class="px-5 py-2.5 text-xs font-semibold text-slate-600 rounded-xl border border-slate-200 hover:bg-slate-50">Batal</button>
+                        @if($availableJadwalSC->count() > 0)
+                            <button type="submit" class="px-6 py-2.5 text-xs font-semibold text-white bg-brand-blue rounded-xl hover:bg-blue-800 shadow-sm transition">
+                                Konfirmasi Pilihan
+                            </button>
+                        @endif
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- MODAL PILIH JADWAL: WAWANCARA                            -->
+        <!-- ======================================================== -->
+        <div id="modal-pilih-wwn" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto" role="dialog" aria-modal="true">
+            <div class="w-full max-w-lg rounded-3xl bg-white shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
+                <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/70">
+                    <div>
+                        <h3 class="text-base font-bold text-brand-navy">Pilih Jadwal Wawancara</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Pilih salah satu jadwal interview yang sesuai dengan ketersediaan Anda.</p>
+                    </div>
+                    <button type="button" data-modal-close="modal-pilih-wwn" class="rounded-xl p-1.5 text-slate-400 hover:bg-slate-100">✕</button>
+                </div>
+                
+                <form action="{{ route('user.jadwal.pilih') }}" method="POST" class="p-6">
+                    @csrf
+                    <div class="space-y-3 mb-6">
+                        @forelse($availableJadwalWwn as $sesi)
+                            @php
+                                $isSelected = $selectedJadwalWwn && $selectedJadwalWwn->SesiId === $sesi->SesiId;
+                            @endphp
+                            <label class="flex items-start gap-3.5 p-4 rounded-2xl border transition cursor-pointer hover:border-brand-blue hover:bg-blue-50/40 {{ $isSelected ? 'border-brand-blue bg-blue-50/50 ring-2 ring-blue-200' : 'border-slate-200 bg-white' }}">
+                                <input type="radio" 
+                                       name="SesiId" 
+                                       value="{{ $sesi->SesiId }}" 
+                                       class="mt-1 h-4 w-4 text-brand-blue focus:ring-brand-blue border-slate-300"
+                                       {{ $isSelected ? 'checked' : '' }}
+                                       required>
+                                <div class="flex-1 text-xs">
+                                    <div class="flex items-center justify-between gap-2 mb-1">
+                                        <span class="font-bold text-sm text-brand-navy">
+                                            {{ \Carbon\Carbon::parse($sesi->TanggalMulai)->format('d F Y') }}
+                                        </span>
+                                        <span class="px-2 py-0.5 rounded-md bg-blue-100/70 text-brand-blue font-bold text-[11px]">
+                                            {{ \Carbon\Carbon::parse($sesi->Jam)->format('H:i') }} WIB
+                                        </span>
+                                    </div>
+                                    @if(!empty($sesi->Lokasi))
+                                        <p class="text-slate-600 font-medium flex items-center gap-1.5 mt-1">
+                                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                                            {{ $sesi->Lokasi }}
+                                        </p>
+                                    @endif
+                                    @if(!empty($sesi->keterangan))
+                                        <p class="text-slate-400 text-[11px] mt-1">{{ $sesi->keterangan }}</p>
+                                    @endif
+                                </div>
+                            </label>
+                        @empty
+                            <div class="py-8 text-center text-xs text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                                <svg class="w-8 h-8 mx-auto text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                Belum ada jadwal yang tersedia.
+                            </div>
+                        @endforelse
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-3 border-t border-slate-100">
+                        <button type="button" data-modal-close="modal-pilih-wwn" class="px-5 py-2.5 text-xs font-semibold text-slate-600 rounded-xl border border-slate-200 hover:bg-slate-50">Batal</button>
+                        @if($availableJadwalWwn->count() > 0)
+                            <button type="submit" class="px-6 py-2.5 text-xs font-semibold text-white bg-brand-blue rounded-xl hover:bg-blue-800 shadow-sm transition">
+                                Konfirmasi Pilihan
+                            </button>
+                        @endif
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- Form Pendaftaran Modal -->
         @include('modals.form')
     </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleModal = (modalId, isOpen) => {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            if (isOpen) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            const openTrigger = e.target.closest('[data-modal-open]');
+            const closeTrigger = e.target.closest('[data-modal-close]');
+
+            if (openTrigger) {
+                e.preventDefault();
+                toggleModal(openTrigger.dataset.modalOpen, true);
+            } else if (closeTrigger) {
+                e.preventDefault();
+                toggleModal(closeTrigger.dataset.modalClose, false);
+            }
+        });
+
+        // Close on backdrop click
+        ['modal-pilih-sc', 'modal-pilih-wwn'].forEach(id => {
+            const modal = document.getElementById(id);
+            modal?.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    toggleModal(id, false);
+                }
+            });
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                toggleModal('modal-pilih-sc', false);
+                toggleModal('modal-pilih-wwn', false);
+            }
+        });
+    });
+    </script>
 @endsection

@@ -8,31 +8,67 @@ use App\Models\StudyCase;
 use App\Models\User;
 use App\Models\Wawancara;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class AdminController extends Controller
 {
+    private function roleDivisionName(): ?string
+    {
+        $role = strtolower(trim((string) (Auth::user()?->Role ?? '')));
+
+        return match ($role) {
+            'admin', 'pres' => null,
+            'hr' => 'Human Resources',
+            'cc' => 'Curiculum',
+            'bendahara' => 'Bendahara',
+            'sekretaris' => 'Sekretaris',
+            'pr' => 'Public Relation',
+            'medinfo' => 'Media & Information',
+            default => null,
+        };
+    }
+
+    private function scopeToRoleDivision($query)
+    {
+        $division = $this->roleDivisionName();
+
+        if ($division === null) {
+            return $query;
+        }
+
+        return $query->whereRaw('LOWER(Divisi) = ?', [strtolower($division)]);
+    }
+
     public function index(): View
     {
+        $applicationsQuery = $this->scopeToRoleDivision(Pendaftaran::query());
+
         $metrics = [
-            'candidates' => User::where('Role', 'user')->count(),
-            'applications' => Pendaftaran::count(),
-            'study_cases' => StudyCase::count(),
+            'candidates' => (clone $applicationsQuery)->distinct('UserId')->count('UserId'),
+            'applications' => (clone $applicationsQuery)->count(),
+            'study_cases' => (clone $applicationsQuery)->whereNotNull('StatusAkhir')->count(),
         ];
 
         $pipeline = [
-            'Menunggu review' => Pendaftaran::where('StatusBerkas', 'Menunggu')->count(),
-            'Lolos berkas' => Pendaftaran::where('StatusBerkas', 'Lolos')->count(),
-            'Selesai' => Pendaftaran::where('StatusAkhir', 'Lolos')->count(),
+            'Menunggu review' => (clone $applicationsQuery)->where('StatusBerkas', 'Menunggu')->count(),
+            'Lolos berkas' => (clone $applicationsQuery)->where('StatusBerkas', 'Lolos')->count(),
+            'Selesai' => (clone $applicationsQuery)->where('StatusAkhir', 'Lolos')->count(),
         ];
 
-        $recentApplications = Pendaftaran::with('user')
+        $recentApplications = (clone $applicationsQuery)
+            ->with('user')
             ->latest('created_at')
             ->limit(6)
             ->get();
 
-        $nextSession = JadwalSesi::where('IsActive', true)
+        $nextSession = JadwalSesi::where(function ($q) {
+                $q->where('status', 'available')->orWhereNull('status');
+            })
+            ->where(function ($q) {
+                $q->where('IsActive', true)->orWhereNull('IsActive');
+            })
             ->orderBy('TanggalMulai', 'asc')
             ->first();
 
@@ -41,18 +77,22 @@ class AdminController extends Controller
 
     public function peserta(): View
     {
-        $pendaftaran = Pendaftaran::with([
-            'user.prodi',
-            'study_case.jadwal_sesi',
-            'wawancara.jadwal_sesi'
-        ])->latest()->get();
+        $pendaftaran = $this->scopeToRoleDivision(
+            Pendaftaran::query()->with([
+                'user.prodi',
+                'study_case.jadwal_sesi',
+                'wawancara.jadwal_sesi',
+                'jadwal_pendaftar.jadwal_sesi'
+            ])
+        )
+            ->latest()
+            ->get();
 
         $sekarang = \Carbon\Carbon::now();
 
         foreach ($pendaftaran as $item) {
-
             $statusBerkas = strtolower($item->StatusBerkas ?? '');
-            $statusCase = strtolower($item->study_case?->StatusCase ?? '');
+            $statusCase = strtolower($item->study_case?->StatusKasus ?? $item->study_case?->StatusCase ?? '');
             $statusWawancara = strtolower($item->wawancara?->StatusWawancara ?? '');
 
             if ($statusBerkas !== 'lolos') {
@@ -68,46 +108,39 @@ class AdminController extends Controller
                 $item->statusTerkini = 'Menunggu Pengumuman';
                 $item->tahapAktif = null;
             }
-        
+
             $item->bolehKelolaStatus = false;
 
             // seleksi berkas
             if ($item->tahapAktif === 'berkas') {
-                $jadwal = JadwalSesi::where('NamaSesi', 'Berkas')
+                $jadwal = JadwalSesi::where('NamaSesi', 'LIKE', '%Berkas%')
                     ->orderBy('TanggalSelesai', 'desc')
                     ->first();
-                if ($jadwal && $sekarang->greaterThan(
+                if ($jadwal && $jadwal->TanggalSelesai && $sekarang->greaterThan(
                     \Carbon\Carbon::parse($jadwal->TanggalSelesai)->endOfDay()
                 )) {
-
                     $item->bolehKelolaStatus = true;
+                } else {
+                    $item->bolehKelolaStatus = true; // izinkan kelola berkas
                 }
             }
-
             // study case
             elseif ($item->tahapAktif === 'study_case') {
-                $jadwal = $item->study_case?->jadwal_sesi;
-                if ($jadwal && $sekarang->greaterThan(
-                    \Carbon\Carbon::parse($jadwal->TanggalSelesai)->endOfDay()
-                )) {
+                $jadwal = $item->study_case?->jadwal_sesi ?? $item->jadwal_study_case?->jadwal_sesi;
+                if ($jadwal) {
                     $item->bolehKelolaStatus = true;
                 }
             }
-
             // wawancara
             elseif ($item->tahapAktif === 'wawancara') {
-                $jadwal = $item->wawancara?->jadwal_sesi;
-                if ($jadwal && $sekarang->greaterThan(
-                    \Carbon\Carbon::parse($jadwal->TanggalSelesai)->endOfDay()
-                )) {
+                $jadwal = $item->wawancara?->jadwal_sesi ?? $item->jadwal_wawancara?->jadwal_sesi;
+                if ($jadwal) {
                     $item->bolehKelolaStatus = true;
                 }
             }
-
-            $jadwalSesi = JadwalSesi::orderBy('TanggalMulai', 'asc')->get();
-
-            return view('admin.peserta', compact('pendaftaran'));
         }
+
+        return view('admin.peserta', compact('pendaftaran'));
     }
 
     public function updateStatus(Request $request, $id)
@@ -128,32 +161,14 @@ class AdminController extends Controller
         $sekarang = \Carbon\Carbon::now();
 
         // Berkas
-        if ($tahap == 'berkas') {
+        if ($tahap === 'berkas') {
             if (strtolower($pendaftaran->StatusBerkas ?? '') === 'lolos') {
                 return back()->with(
                     'error', 'Status seleksi berkas yang sudah lolos tidak dapat diubah'
                 );
             }
 
-            // Cari jadwal berkas
-            $jadwalBerkas = JadwalSesi::where('NamaSesi', 'Berkas')->orderBy('TanggalSelesai', 'desc')->first();
-
-            if (!$jadwalBerkas) {
-                return back()->with(
-                    'error', 'Jadwal seleksi berkas belum tersedia.'
-                );
-            }
-
-            // cek seleksi selesai
-            $tanggalSelesai = \Carbon\Carbon::perse(
-                $jadwalBerkas->TanggalSelesai
-            )->endOfDay();
-
-            if ($sekarang->lessThan($tanggalSelesai)) {
-                return back()->with('error', 'Seleksi berkas belum selesai.');
-            }
-
-            $pendaftaran->StatusBerkas = $hasil;
+            $pendaftaran->StatusBerkas = ($hasil === 'lolos') ? 'Lolos' : 'Tidak Lolos';
             $pendaftaran->save();
 
             return back()->with(
@@ -163,46 +178,21 @@ class AdminController extends Controller
 
         // Study Case
         if ($tahap === 'study_case') {
-            // Berkas harus sudah lolos
             if (strtolower($pendaftaran->StatusBerkas ?? '') !== 'lolos') {
                 return back()->with(
                     'error', 'Study Case belum dapat diproses karena seleksi berkas belum Lolos.'
                 );
             }
-            // Harus sudah ada data Study Case
+
             if (!$pendaftaran->study_case) {
-                return back()->with(
-                    'error', 'Data Study Case peserta belum tersedia.'
-                );
+                // Buat record study_case jika belum ada
+                $pendaftaran->study_case()->create([
+                    'StatusKasus' => ($hasil === 'lolos') ? 'Lolos' : 'Tidak Lolos',
+                ]);
+            } else {
+                $pendaftaran->study_case->StatusKasus = ($hasil === 'lolos') ? 'Lolos' : 'Tidak Lolos';
+                $pendaftaran->study_case->save();
             }
-
-            // Tidak boleh mengubah jika sudah lolos
-            if (strtolower($pendaftaran->study_case->StatusCase ?? '') === 'lolos') {
-                return back()->with(
-                    'error', 'Status Study Case yang sudah Lolos tidak dapat diubah.'
-                );
-            }
-
-            $jadwalStudyCase = $pendaftaran->study_case->jadwal_sesi;
-            if(!$jadwalStudyCase) {
-                return back()->with(
-                    'error', 'Jadwal study case peserta belum tersedia.'
-                );
-            }
-
-            $tanggalSelesai = \Carbon\Carbon::parse(
-                $jadwalStudyCase->TanggalSelesai
-            )->endOfDay();
-
-            if ($sekarang->lessThan($tanggalSelesai)) {
-                return back()->with(
-                    'error',
-                    'Study Case belum selesai.'
-                );
-            }
-
-            $pendaftaran->study_case->StatusCase = $hasil;
-            $pendaftaran->study_case->save();
 
             return back()->with(
                 'success', 'Status Study Case berhasil diperbarui.'
@@ -211,58 +201,29 @@ class AdminController extends Controller
 
         // Wawancara
         if ($tahap === 'wawancara') {
-
-            // Berkas harus lolos
             if (strtolower($pendaftaran->StatusBerkas ?? '') !== 'lolos') {
                 return back()->with(
                     'error', 'Wawancara belum dapat diproses.'
                 );
             }
 
-            // Study Case harus lolos
-            if (strtolower($pendaftaran->study_case?->StatusCase ?? '') !== 'lolos') {
-                return back()->with(
-                    'error', 'Wawancara belum dapat diproses karena Study Case belum Lolos.'
-                );
-            }
-
-            // Harus ada data wawancara
             if (!$pendaftaran->wawancara) {
-                return back()->with(
-                    'error', 'Data wawancara peserta belum tersedia.'
-                );
+                // Buat record wawancara jika belum ada
+                $pendaftaran->wawancara()->create([
+                    'StatusWawancara' => ($hasil === 'lolos') ? 'Lolos' : 'Tidak Lolos',
+                ]);
+            } else {
+                $pendaftaran->wawancara->StatusWawancara = ($hasil === 'lolos') ? 'Lolos' : 'Tidak Lolos';
+                $pendaftaran->wawancara->save();
             }
 
-            // Tidak boleh mengubah jika sudah lolos
-            if (strtolower($pendaftaran->wawancara->StatusWawancara ?? '') === 'lolos') {
-                return back()->with(
-                    'error',
-                    'Status Wawancara yang sudah Lolos tidak dapat diubah.'
-                );
+            // Jika lolos wawancara, set StatusAkhir pendaftaran
+            if ($hasil === 'lolos') {
+                $pendaftaran->StatusAkhir = 'Lolos';
+            } else {
+                $pendaftaran->StatusAkhir = 'Tidak Lolos';
             }
-
-            $jadwalWawancara = $pendaftaran->wawancara->jadwal_sesi;
-            if (!$jadwalWawancara) {
-                return back()->with(
-                    'error',
-                    'Jadwal Wawancara peserta belum tersedia.'
-                );
-            }
-
-            // Cek tanggal selesai
-            $tanggalSelesai = \Carbon\Carbon::parse(
-                $jadwalWawancara->TanggalSelesai
-            )->endOfDay();
-
-            if ($sekarang->lessThan($tanggalSelesai)) {
-                return back()->with(
-                    'error',
-                    'Wawancara belum selesai.'
-                );
-            }
-
-            $pendaftaran->wawancara->StatusWawancara = $hasil;
-            $pendaftaran->wawancara->save();
+            $pendaftaran->save();
 
             return back()->with(
                 'success', 'Status Wawancara berhasil diperbarui.'
@@ -274,7 +235,14 @@ class AdminController extends Controller
 
     public function jadwal()
     {
-        $jadwalSesi = JadwalSesi::orderBy('TanggalMulai', 'asc')->get();
+        $jadwalSesi = JadwalSesi::with([
+            'jadwal_pendaftar.pendaftaran.user.prodi'
+        ])
+        ->withCount('jadwal_pendaftar')
+        ->orderBy('TanggalMulai', 'asc')
+        ->orderBy('Jam', 'asc')
+        ->get();
+
         return view('admin.jadwal', compact('jadwalSesi'));
     }
 
@@ -282,70 +250,80 @@ class AdminController extends Controller
     {
         $request->validate([
             'NamaSesi' => 'required|string',
+            'TanggalMulai' => 'required|date',
+            'Jam' => 'required',
+            'Lokasi' => 'nullable|string|max:255',
+            'keterangan' => 'nullable|string|max:255',
+            'status' => 'nullable|string|in:available,closed,cancelled',
         ]);
 
         $namaSesi = $request->input('NamaSesi');
-        $pembagianHari = (int) $request->input('pembagian_hari', 1);
 
-        // Tahapan Berkas
-        if (strtolower($namaSesi) === 'berkas') {
-            $request->validate([
-                'TanggalMulai' => 'required|date',
-                'TanggalSelesai' => "required|date|ater_or_equal:TanggalMulai",
-                'Jam' => 'required',
-                'Lokasi' => 'required|string|max:50',
-            ]);
+        $jadwalData = [
+            'NamaSesi' => $namaSesi,
+            'TanggalMulai' => $request->TanggalMulai,
+            'Jam' => $request->Jam,
+            'Lokasi' => $request->Lokasi,
+            'keterangan' => $request->keterangan,
+            'status' => $request->input('status', 'available'),
+            'IsActive' => $request->has('IsActive') ? 1 : 1,
+        ];
 
-            $jadwalData = [
-                'NamaSesi' => $namaSesi,
-                'TanggalMulai' => $request->TanggalMulai,
-                'TanggalSelesai' => $request->TanggalSelesai,
-                'Jam' => $request->Jam,
-                'Lokasi' => $request->Lokasi,
-                'IsActive' => $request->has('IsActive') ? 1 : 0,
-            ];
-
-            JadwalSesi::create($jadwalData);
+        if (strtolower($namaSesi) === 'berkas' && $request->filled('TanggalBerakhir')) {
+            $jadwalData['TanggalSelesai'] = $request->TanggalBerakhir;
         }
 
-        // jika study case dan wawancara >1 hari
-        if ($pembagianHari > 1 && $request->has('hari')) {
-            foreach ($request->input('hari') as $index => $dataHari) {
-                if (!empty($dataHari['tanggal'])) {
-                    $jadwalData = [
-                        'NamaSesi' => $namaSesi . ' (Hari ke-' . ($index + 1) . ')',
-                        'TanggalMulai' => $dataHari['tanggal'],
-                        'Jam' => $dataHari['jam'] ?? '09:00',
-                        'IsActive' => $request->has('IsActive') ? 1 : 0,
-                    ];
-                    if (Schema::hasColumn('jadwal_sesi', 'Lokasi') && !empty($dataHari['lokasi'])) {
-                        $jadwalData['Lokasi'] = $dataHari['lokasi'];
-                    }
-                    JadwalSesi::create($jadwalData);
-                }
-            }
-        } 
-        
-        // jika study case dan wawancara hanya 1 hari
-        else {
-            $request->validate([
-                'TanggalMulai' => 'required|date',
-                'Jam' => 'required',
-            ]);
+        JadwalSesi::create($jadwalData);
 
-            $jadwalData = [
-                'NamaSesi' => $namaSesi,
-                'TanggalMulai' => $request->TanggalMulai,
-                'Jam' => $request->Jam,
-                'IsActive' => $request->has('IsActive') ? 1 : 0,
-            ];
-            if (Schema::hasColumn('jadwal_sesi', 'Lokasi') && !empty($request->Lokasi)) {
-                $jadwalData['Lokasi'] = $request->Lokasi;
-            }
-            JadwalSesi::create($jadwalData);
-        }
+        return redirect()->back()->with('success', 'Jadwal seleksi ' . $namaSesi . ' berhasil ditambahkan!');
+    }
 
-        return redirect()->back()->with('success', 'Jadwal tahapan seleksi ' . $namaSesi . ' berhasil didaftarkan!');
+    public function updateJadwal(Request $request, $id)
+    {
+        $jadwal = JadwalSesi::findOrFail($id);
+
+        $request->validate([
+            'NamaSesi' => 'required|string',
+            'TanggalMulai' => 'required|date',
+            'Jam' => 'required',
+            'Lokasi' => 'nullable|string|max:255',
+            'keterangan' => 'nullable|string|max:255',
+            'status' => 'required|string|in:available,closed,cancelled',
+        ]);
+
+        $jadwal->update([
+            'NamaSesi' => $request->NamaSesi,
+            'TanggalMulai' => $request->TanggalMulai,
+            'Jam' => $request->Jam,
+            'Lokasi' => $request->Lokasi,
+            'keterangan' => $request->keterangan,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'Jadwal seleksi berhasil diperbarui!');
+    }
+
+    public function updateStatusJadwal(Request $request, $id)
+    {
+        $jadwal = JadwalSesi::findOrFail($id);
+
+        $request->validate([
+            'status' => 'required|in:available,closed,cancelled',
+        ]);
+
+        $jadwal->update([
+            'status' => $request->status,
+            'IsActive' => ($request->status === 'available') ? 1 : 0,
+        ]);
+
+        $statusLabel = match ($request->status) {
+            'available' => 'Tersedia (Available)',
+            'closed' => 'Ditutup (Closed)',
+            'cancelled' => 'Dibatalkan (Cancelled)',
+            default => $request->status,
+        };
+
+        return redirect()->back()->with('success', 'Status jadwal berhasil diubah menjadi: ' . $statusLabel);
     }
 
     public function destroyJadwal($id)
@@ -355,6 +333,4 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Jadwal sesi berhasil dihapus!');
     }
-
-
 }

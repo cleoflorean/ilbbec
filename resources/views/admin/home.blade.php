@@ -9,7 +9,16 @@
                         <div>
                                 <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-blue">Operations control center</p>
                                 <h1 class="mt-2 text-3xl font-bold tracking-tight text-brand-navy">Dashboard administrasi</h1>
-                                <p class="mt-2 text-sm text-slate-500">Pantau seluruh proses rekrutmen ILBBEC dari satu ruang kerja.</p>
+                                <p class="mt-2 text-sm text-slate-500">
+                                        @php
+                                                $role = auth()->user()?->Role ?? 'Admin';
+                                        @endphp
+                                        @if(in_array(strtolower($role), ['admin', 'pres']))
+                                                Pantau seluruh proses rekrutmen ILBBEC dari satu ruang kerja.
+                                        @else
+                                                Menampilkan data pendaftaran divisi {{ $role }} saja.
+                                        @endif
+                                </p>
                         </div>
                 </div>
 
@@ -57,6 +66,7 @@
                                                     <tr>
                                                         <th class="pb-3 font-semibold">Kandidat</th>
                                                         <th class="pb-3 font-semibold">Divisi</th>
+                                                        <th class="pb-3 font-semibold">Divisi 2</th>
                                                         <th class="pb-3 font-semibold">Berkas CV</th>
                                                         <th class="pb-3 font-semibold">Status Berkas</th>
                                                         <th class="pb-3 font-semibold">Status akhir</th>
@@ -70,6 +80,7 @@
                                                                                 <p class="text-xs text-slate-400">{{ $application->user?->Email ?? '-' }}</p>
                                                                         </td>
                                                                         <td class="py-4 text-slate-600">{{ $application->Divisi }}</td>
+                                                                        <td class="py-4 text-slate-600">{{ $application->Divisi2 }}</td>
                                                                          <td class="py-4">
                                                                                 <a href="{{ Storage::url($application->BerkasCV) }}" target="_blank" class="text-brand-blue hover:underline">Lihat Berkas</a>
                                                                         </td>

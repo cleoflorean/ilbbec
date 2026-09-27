@@ -2,31 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
+use App\Models\Pendaftaran;
+use Illuminate\Support\Facades\Storage;
+use App\Jobs\ProcessPendaftaranJob;
+
+use Illuminate\Support\Facades\Auth;
 
 class PendaftaranController extends Controller
 {
-    public function CreatePendaftaran(Request $request){
+    public function CreatePendaftaran(Request $request)
+    {
+        $userId = Auth::id() ?? $request->UserId;
+
+        // Cegah spam/duplikasi pendaftaran jika user sudah pernah submit
+        if ($userId && Pendaftaran::where('UserId', $userId)->exists()) {
+            return redirect()->back()->with('error', 'Anda sudah melakukan pendaftaran sebelumnya.');
+        }
 
         $request->validate([
-            'UserId' => 'required|integer|max:255',
-            'Divisi' => 'required|string|max:255',
-            'BerkasCV' => 'required|file|mimes:pdf|max:2048',
-            'Portofolio' => 'nullable|file|mimes:pdf|max:2048',
+            'Divisi'     => 'required|string|max:255',
+            'Divisi2'    => 'required|string|max:255',
+            'BerkasCV'   => 'required|file|mimes:pdf|max:2048',
+            'Portofolio' => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
-        $BerkasCVPath = $request->file('BerkasCV')->store('BerkasCV', 'public');
-        $portofolioPath = $request->hasFile('Portofolio') ? $request->file('Portofolio')->store('portofolio', 'public') : null;
+        $cvFileName = 'CV_' . $userId . '_' . time() . '.pdf';
+        $BerkasCVPath = $request->file('BerkasCV')->storeAs('BerkasCV', $cvFileName, 'public');
 
-        // Simpan data pendaftaran ke database
-        Pendaftaran::create([
-            'UserId' => $request->UserId,
-            'Divisi' => $request->Divisi,
-            'BerkasCV' => $BerkasCVPath,
+        $portofolioPath = null;
+        if ($request->hasFile('Portofolio')) {
+            $portfolioFileName = 'Portofolio_' . $userId . '_' . time() . '.pdf';
+            $portofolioPath = $request->file('Portofolio')->storeAs('Portofolio', $portfolioFileName, 'public');
+        }
+
+        $payload = [
+            'UserId'     => $userId,
+            'Divisi'     => $request->Divisi,
+            'Divisi2'    => $request->Divisi2,
+            'BerkasCV'   => $BerkasCVPath,
             'Portofolio' => $portofolioPath,
-        ]);
+        ];
 
-        return redirect()->back()->with('success', 'Pendaftaran berhasil dikirim!');
+        ProcessPendaftaranJob::dispatch($payload);
+
+        return redirect()->back()->with('success', 'Pendaftaran Anda berhasil diterima dan sedang diproses!');
     }
 }

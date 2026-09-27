@@ -9,7 +9,7 @@ class Pendaftaran extends Model
     protected $table = 'pendaftaran';
     protected $primaryKey = 'PendaftaranId';
     protected $fillable = [
-        'UserId', 'Divisi', 'BerkasCV', 'Portofolio', 'StatusBerkas', 'StatusAkhir'
+        'UserId', 'Divisi', 'Divisi2', 'BerkasCV', 'Portofolio', 'StatusBerkas', 'StatusAkhir'
     ];
 
     public function user()
@@ -25,5 +25,32 @@ class Pendaftaran extends Model
     public function wawancara()
     {
         return $this->hasOne(Wawancara::class, 'PendaftaranId', 'PendaftaranId');
+    }
+
+    public function jadwal_pendaftar()
+    {
+        return $this->hasMany(JadwalPendaftar::class, 'PendaftaranId', 'PendaftaranId');
+    }
+
+    /**
+     * Mengambil jadwal pendaftar khusus tahap Study Case
+     */
+    public function getJadwalStudyCaseAttribute()
+    {
+        return $this->jadwal_pendaftar
+            ->first(function ($jp) {
+                return $jp->jadwal_sesi && str_contains(strtolower($jp->jadwal_sesi->NamaSesi), 'study');
+            });
+    }
+
+    /**
+     * Mengambil jadwal pendaftar khusus tahap Wawancara
+     */
+    public function getJadwalWawancaraAttribute()
+    {
+        return $this->jadwal_pendaftar
+            ->first(function ($jp) {
+                return $jp->jadwal_sesi && str_contains(strtolower($jp->jadwal_sesi->NamaSesi), 'wawancara');
+            });
     }
 }

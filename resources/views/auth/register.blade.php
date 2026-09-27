@@ -126,6 +126,23 @@
                                   {{ $errors->has('TanggalLahir') ? 'border-red-400 bg-red-50' : 'border-slate-200 bg-white' }}
                                   focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
                 </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+                        Gender <span class="text-red-500">*</span>
+                    </label>
+                  <select name="Gender"
+                            class="w-full px-4 py-2.5 rounded-xl border text-sm transition-all duration-200
+                                   {{ $errors->has('Gender') ? 'border-red-400 bg-red-50' : 'border-slate-200 bg-white' }}
+                                   focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue">
+                        <option value="">Pilih Gender</option>
+                        <option value="Laki laki" {{ old('Gender') === 'Laki laki' ? 'selected' : '' }}>
+                            Laki laki
+                        </option>
+                        <option value="Perempuan" {{ old('Gender') === 'Perempuan' ? 'selected' : '' }}>
+                            Perempuan
+                        </option>
+                   </select>
+                </div>
             </div>
 
             {{-- Row 4: No. HP & Email --}}

@@ -12,7 +12,14 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        if (!$user || !in_array(strtolower((string) $user->Role), array_map('strtolower', $roles), true)) {
+        if (!$user) {
+            abort(403);
+        }
+
+        $normalizedUserRole = strtolower(trim((string) $user->Role));
+        $normalizedRoles = array_map(fn (string $role) => strtolower(trim($role)), $roles);
+
+        if (!in_array($normalizedUserRole, $normalizedRoles, true)) {
             abort(403);
         }
 

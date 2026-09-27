@@ -41,6 +41,17 @@
                                     <option value="Media & Information">Media & Information</option>
                                 </select>
                             </div>
+                            <div class="mb-3">
+                                <label for="pendaftaran-role" class="mb-1 block text-sm font-medium text-slate-700">Divisi 2</label>
+                                <select name="Divisi2" id="pendaftaran-role" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
+                                    <option value="Bendahara">Bendahara</option>
+                                    <option value="Sekretaris">Sekretaris</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Public Relation">Public Relation</option>
+                                    <option value="Curiculum">Curiculum</option>
+                                    <option value="Media & Information">Media & Information</option>
+                                </select>
+                            </div>
                                 <div class="mb-3">
                                     <label for="pendaftaran-cv" class="mb-1 block text-sm font-medium text-slate-700">Upload CV (PDF)</label>
                                     <input type="file" name="BerkasCV" id="pendaftaran-cv" class="w-full rounded-lg border border-slate-300 px-3 py-2" accept="application/pdf" required>

@@ -15,7 +15,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'ProdiId', 'Nama', 'Npm', 'TempatLahir', 'TanggalLahir',
-        'NoTlp', 'Email', 'Password', 'Angkatan', 'Role',
+        'NoTlp', 'Email', 'Password', 'Angkatan', 'Role', 'Gender'
     ];
 
     protected $hidden = [

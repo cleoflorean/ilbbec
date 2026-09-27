@@ -31,6 +31,7 @@ class AuthController extends Controller
             'Email'        => 'required|email|max:50|unique:users,Email',
             'Password'     => 'required|string|min:8|confirmed',
             'Angkatan'     => 'required|integer|digits:4',
+            'Gender'       => 'required|in:Laki laki,Perempuan',
         ], [
             'Npm.unique'   => 'NPM ini sudah terdaftar.',
             'Email.unique' => 'Email ini sudah digunakan.',
@@ -48,6 +49,7 @@ class AuthController extends Controller
             'Email'        => strtolower($request->string('Email')->trim()->toString()),
             'Password'     => Hash::make($request->Password),
             'Angkatan'     => $request->Angkatan,
+            'Gender'       => $request->Gender,
             'Role'         => 'user',
         ]);
 
@@ -89,10 +91,28 @@ class AuthController extends Controller
         return $this->redirectByRole($user)->with('success', 'Selamat datang, ' . $user->Nama . '!');
     }
 
+    private function normalizeRole(?string $role): string
+    {
+        $role = strtolower(trim((string) $role));
+
+        return match ($role) {
+            'admin' => 'admin',
+            'pres', 'presiden' => 'pres',
+            'hr', 'human resources', 'human_resources' => 'hr',
+            'cc', 'curiculum', 'curriculum' => 'cc',
+            'bendahara' => 'bendahara',
+            'sekretaris' => 'sekretaris',
+            'pr', 'public relation', 'public_relation' => 'pr',
+            'medinfo', 'media & information', 'media_and_information', 'media-information' => 'medinfo',
+            'user' => 'user',
+            default => 'invalid',
+        };
+    }
+
     private function redirectByRole(User $user)
     {
-        return match (strtolower((string) $user->Role)) {
-            'admin' => redirect()->route('admin.home'),
+        return match ($this->normalizeRole($user->Role)) {
+            'admin', 'pres', 'hr', 'cc', 'bendahara', 'sekretaris', 'pr', 'medinfo' => redirect()->route('admin.home'),
             'user' => redirect()->route('user.home'),
             default => $this->rejectInvalidRole(),
         };
