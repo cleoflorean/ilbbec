@@ -286,7 +286,7 @@
     </div>
 </div>
 
-<!-- ================= MODAL LIHAT PESERTA ================= -->
+<!-- ================= MODAL LIHAT PESERTA (pop up) ================= -->
 <div id="peserta-jadwal-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
     <div class="w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl bg-white shadow-2xl border border-slate-100 overflow-hidden">
         <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4 bg-slate-50/80">
@@ -318,13 +318,25 @@
                 Belum ada peserta yang memilih jadwal ini.
             </div>
         </div>
-        <div class="p-4 border-t border-slate-100 bg-slate-50/50 flex justify-end">
+        <div class="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
+            <button type="button" id="btn-export-excel-peserta"
+                class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Export daftar peserta ke file Excel">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Export Excel
+            </button>
             <button type="button" id="btn-close-peserta-modal-bottom" class="px-5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50">Tutup</button>
         </div>
     </div>
 </div>
 
 @include('modals.form-jadwal')
+
+<!-- SheetJS CDN untuk Export Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -369,18 +381,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const subtitle = document.getElementById('peserta-modal-subtitle');
     const tbody = document.getElementById('peserta-modal-tbody');
     const emptyState = document.getElementById('peserta-modal-empty');
+    const btnExport = document.getElementById('btn-export-excel-peserta');
+
+    // Simpan data peserta aktif untuk keperluan export
+    let currentPesertaData = [];
+    let currentSesiTitle = '';
 
     document.querySelectorAll('.btn-lihat-peserta').forEach(btn => {
         btn.addEventListener('click', () => {
-            subtitle.textContent = btn.dataset.sesiTitle || '';
-            const peserta = JSON.parse(btn.dataset.peserta || '[]');
+            currentSesiTitle = btn.dataset.sesiTitle || 'Peserta Jadwal';
+            subtitle.textContent = currentSesiTitle;
+            currentPesertaData = JSON.parse(btn.dataset.peserta || '[]');
             tbody.innerHTML = '';
 
-            if (peserta.length === 0) {
+            if (currentPesertaData.length === 0) {
                 emptyState.classList.remove('hidden');
+                if (btnExport) btnExport.disabled = true;
             } else {
                 emptyState.classList.add('hidden');
-                peserta.forEach((item, index) => {
+                if (btnExport) btnExport.disabled = false;
+                currentPesertaData.forEach((item, index) => {
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-blue-50/30 transition';
                     row.innerHTML = `
@@ -418,6 +438,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('close-peserta-modal')?.addEventListener('click', closePeserta);
     document.getElementById('btn-close-peserta-modal-bottom')?.addEventListener('click', closePeserta);
+
+    // ── Export Excel ───────────────────────────────────────────────────────
+    if (btnExport) {
+        btnExport.addEventListener('click', () => {
+            if (!currentPesertaData || currentPesertaData.length === 0) return;
+
+            // Bangun data array untuk SheetJS
+            const header = ['No', 'Nama', 'NPM', 'Program Studi', 'Divisi 1', 'Divisi 2', 'Waktu Memilih'];
+            const rows = currentPesertaData.map((item, i) => [
+                i + 1,
+                item.nama,
+                item.npm,
+                item.prodi,
+                item.divisi,
+                item.divisi2,
+                item.selected_at,
+            ]);
+
+            const worksheetData = [header, ...rows];
+            const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+            // Style lebar kolom agar rapi
+            ws['!cols'] = [
+                { wch: 5 },   // No
+                { wch: 30 },  // Nama
+                { wch: 14 },  // NPM
+                { wch: 28 },  // Prodi
+                { wch: 22 },  // Divisi 1
+                { wch: 22 },  // Divisi 2
+                { wch: 22 },  // Waktu
+            ];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Peserta Jadwal');
+
+            // Nama file: sanitasi judul sesi
+            const safeTitle = currentSesiTitle.replace(/[^a-zA-Z0-9\s\-_]/g, '').trim().replace(/\s+/g, '_');
+            const filename = `Peserta_${safeTitle || 'Jadwal'}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+
+            XLSX.writeFile(wb, filename);
+        });
+    }
+
 
     // ESC to close any modal
     document.addEventListener('keydown', (e) => {
