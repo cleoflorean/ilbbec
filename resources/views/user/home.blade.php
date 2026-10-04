@@ -194,8 +194,8 @@
                         <span class="font-semibold text-slate-700">{{ $pendaftaran ? $pendaftaran->created_at->format('d M Y') : '-' }}</span>
                     </div>
                     <div class="flex items-center justify-between py-1 border-b border-slate-50">
-                        <span class="text-slate-400 text-xs">Waktu</span>
-                        <span class="font-semibold text-slate-700">{{ $pendaftaran ? $pendaftaran->created_at->format('H:i') . ' WIB' : '-' }}</span>
+                        <span class="text-slate-400 text-xs">Tenggat Waktu</span>
+                        <span class="font-semibold text-slate-700">17 Oktober 2026</span>
                     </div>
                     <div class="flex items-center justify-between py-1 border-b border-slate-50">
                         <span class="text-slate-400 text-xs">Status Berkas</span>

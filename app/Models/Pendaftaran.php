@@ -17,6 +17,11 @@ class Pendaftaran extends Model
         return $this->belongsTo(User::class, 'UserId', 'UserId');
     }
     
+    public function refleksi()
+    {
+        return $this->hasOne(PendaftaranRefleksi::class, 'PendaftaranId', 'PendaftaranId');
+    }
+
     public function study_case()
     {
         return $this->hasOne(StudyCase::class, 'PendaftaranId', 'PendaftaranId');

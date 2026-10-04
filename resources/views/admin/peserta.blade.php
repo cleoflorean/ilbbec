@@ -118,7 +118,13 @@
                                 data-status-case="{{ $item->study_case?->StatusKasus ?? $item->study_case?->StatusCase ?? '' }}"
                                 data-status-wawancara="{{ $item->wawancara?->StatusWawancara ?? '' }}"
                                 data-detail-date="{{ $item->created_at ? $item->created_at->format('d M Y, H:i') : '-' }}"
-                                data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}" >
+                                data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}"
+                                data-refleksi-q1-emosi="{{ $item->refleksi?->Pertanyaan1_Emosi ?? '' }}"
+                                data-refleksi-q1-alasan="{{ $item->refleksi?->Pertanyaan1_Alasan ?? '' }}"
+                                data-refleksi-q2-emosi="{{ $item->refleksi?->Pertanyaan2_Emosi ?? '' }}"
+                                data-refleksi-q2-alasan="{{ $item->refleksi?->Pertanyaan2_Alasan ?? '' }}"
+                                data-refleksi-q3-emosi="{{ $item->refleksi?->Pertanyaan3_Emosi ?? '' }}"
+                                data-refleksi-q3-alasan="{{ $item->refleksi?->Pertanyaan3_Alasan ?? '' }}" >
                                 <!-- No -->
                                 <td class="py-4 px-4 text-xs font-semibold text-slate-400">{{ $index + 1 }}</td>
                                 <!-- Kandidat -->
@@ -210,6 +216,7 @@
                         data-detail-phone="{{ $item->user?->NoTlp ?? '' }}"
                         data-detail-prodi="{{ $item->user?->prodi?->NamaProdi ?? '-' }}"
                         data-detail-angkatan="{{ $item->user?->Angkatan ?? '-' }}"
+                        data-detail-divisi="{{ $item->Divisi ?? '-' }}"
                         data-detail-divisi2="{{ $item->Divisi2 ?? '-' }}"
                         data-detail-status-terkini="{{ $item->statusTerkini ?? 'Seleksi Berkas' }}"
                         data-detail-status-akhir="{{ $item->StatusAkhir ?? 'Dalam Proses' }}"
@@ -217,7 +224,13 @@
                         data-status-case="{{ $item->study_case?->StatusKasus ?? $item->study_case?->StatusCase ?? '' }}"
                         data-status-wawancara="{{ $item->wawancara?->StatusWawancara ?? '' }}"
                         data-detail-date="{{ $item->created_at ? $item->created_at->format('d M Y, H:i') : '-' }}"
-                        data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}">
+                        data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}"
+                        data-refleksi-q1-emosi="{{ $item->refleksi?->Pertanyaan1_Emosi ?? '' }}"
+                        data-refleksi-q1-alasan="{{ $item->refleksi?->Pertanyaan1_Alasan ?? '' }}"
+                        data-refleksi-q2-emosi="{{ $item->refleksi?->Pertanyaan2_Emosi ?? '' }}"
+                        data-refleksi-q2-alasan="{{ $item->refleksi?->Pertanyaan2_Alasan ?? '' }}"
+                        data-refleksi-q3-emosi="{{ $item->refleksi?->Pertanyaan3_Emosi ?? '' }}"
+                        data-refleksi-q3-alasan="{{ $item->refleksi?->Pertanyaan3_Alasan ?? '' }}">
                         <!-- TOP CARD -->
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex items-center gap-3 min-w-0">
@@ -342,12 +355,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTanggal = document.getElementById('detail-tanggal');
     const modalCv = document.getElementById('detail-cv');
 
+    // REFLEKSI INSIDE OUT ELEMENTS
+    const refleksiContent = document.getElementById('detail-refleksi-content');
+    const refleksiEmpty = document.getElementById('detail-refleksi-empty');
+    const refleksiQ1Badge = document.getElementById('detail-refleksi-q1-badge');
+    const refleksiQ1Alasan = document.getElementById('detail-refleksi-q1-alasan');
+    const refleksiQ2Badge = document.getElementById('detail-refleksi-q2-badge');
+    const refleksiQ2Alasan = document.getElementById('detail-refleksi-q2-alasan');
+    const refleksiQ3Badge = document.getElementById('detail-refleksi-q3-badge');
+    const refleksiQ3Alasan = document.getElementById('detail-refleksi-q3-alasan');
+
     // STATUS MODAL ELEMENTS
     const statusModal = document.getElementById('status-seleksi-modal');
     const statusPeserta = document.getElementById('status-seleksi-peserta');
     const statusTahap = document.getElementById('status-seleksi-tahap');
     const statusTahapInput = document.getElementById('status-seleksi-tahap-input');
     const statusForm = document.getElementById('status-seleksi-form');
+
+    function getEmotionBadge(emotion) {
+        if (!emotion) return '<span class="text-xs text-slate-400 italic">Belum dipilih</span>';
+        const em = emotion.trim().toLowerCase();
+        
+        if (em === 'joy') {
+            return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-amber-400 ring-2 ring-amber-200"></span>
+                Joy (Kuning)
+            </span>`;
+        } else if (em === 'anger') {
+            return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-red-50 text-red-900 border border-red-200 shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-red-500 ring-2 ring-red-200"></span>
+                Anger (Merah)
+            </span>`;
+        } else if (em === 'sadness') {
+            return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-50 text-blue-900 border border-blue-200 shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-blue-500 ring-2 ring-blue-200"></span>
+                Sadness (Biru)
+            </span>`;
+        } else if (em === 'disgust') {
+            return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-900 border border-emerald-200 shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200"></span>
+                Disgust (Hijau)
+            </span>`;
+        } else if (em === 'fear') {
+            return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-50 text-purple-900 border border-purple-200 shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-purple-500 ring-2 ring-purple-200"></span>
+                Fear (Ungu)
+            </span>`;
+        }
+        
+        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">${emotion}</span>`;
+    }
 
     function formatStatus(status) {
         status = (status || '').toLowerCase().trim();
@@ -401,6 +458,34 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             modalCv.classList.add('hidden');
         }
+
+        // REFLEKSI INSIDE OUT
+        const q1Emosi = element.dataset.refleksiQ1Emosi || '';
+        const q1Alasan = element.dataset.refleksiQ1Alasan || '';
+        const q2Emosi = element.dataset.refleksiQ2Emosi || '';
+        const q2Alasan = element.dataset.refleksiQ2Alasan || '';
+        const q3Emosi = element.dataset.refleksiQ3Emosi || '';
+        const q3Alasan = element.dataset.refleksiQ3Alasan || '';
+
+        const hasRefleksi = q1Emosi || q1Alasan || q2Emosi || q2Alasan || q3Emosi || q3Alasan;
+
+        if (hasRefleksi) {
+            if (refleksiContent) refleksiContent.classList.remove('hidden');
+            if (refleksiEmpty) refleksiEmpty.classList.add('hidden');
+
+            if (refleksiQ1Badge) refleksiQ1Badge.innerHTML = getEmotionBadge(q1Emosi);
+            if (refleksiQ1Alasan) refleksiQ1Alasan.textContent = q1Alasan || '-';
+
+            if (refleksiQ2Badge) refleksiQ2Badge.innerHTML = getEmotionBadge(q2Emosi);
+            if (refleksiQ2Alasan) refleksiQ2Alasan.textContent = q2Alasan || '-';
+
+            if (refleksiQ3Badge) refleksiQ3Badge.innerHTML = getEmotionBadge(q3Emosi);
+            if (refleksiQ3Alasan) refleksiQ3Alasan.textContent = q3Alasan || '-';
+        } else {
+            if (refleksiContent) refleksiContent.classList.add('hidden');
+            if (refleksiEmpty) refleksiEmpty.classList.remove('hidden');
+        }
+
         modal.classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
     }

@@ -26,7 +26,6 @@
                         @foreach([
                                 ['label' => 'User Register', 'value' => $metrics['candidates'], 'icon' => 'users', 'tone' => 'blue'],
                                 ['label' => 'Total Pendaftaran', 'value' => $metrics['applications'], 'icon' => 'clipboard', 'tone' => 'orange'],
-                                ['label' => 'Konfirmasi Status', 'value' => $metrics['study_cases'], 'icon' => 'document', 'tone' => 'emerald'],
                         ] as $metric)
                                 <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow">
                                         <div class="flex items-start justify-between">

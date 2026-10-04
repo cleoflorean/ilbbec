@@ -1,6 +1,6 @@
 <!-- MODAL DETAIL PESERTA -->
 <div id="detail-peserta" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-6" role="dialog" aria-modal="true">
-    <div class="relative w-full sm:max-w-xl max-h-[92vh] overflow-y-auto bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl">
+    <div class="relative w-full sm:max-w-2xl max-h-[92vh] overflow-y-auto bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl">
 
         <!--  HEADER  -->
         <div class="sticky top-0 z-10 bg-white border-b border-slate-100 px-5 sm:px-6 py-4 flex items-center justify-between">
@@ -69,6 +69,96 @@
                         <p class="text-[11px] text-slate-400 mb-1">Tanggal Pendaftaran</p>
                         <p id="detail-tanggal" class="text-xs font-medium text-slate-700">-</p>
                     </div>
+                </div>
+            </div>
+
+            <!--  REFLEKSI KARAKTER & EMOSI (INSIDE OUT)  -->
+            <div class="rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+                <div class="px-4 py-3 bg-slate-50/80 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <div class="flex items-center -space-x-1">
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 ring-1 ring-white" title="Joy"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 ring-1 ring-white" title="Anger"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500 ring-1 ring-white" title="Sadness"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-1 ring-white" title="Disgust"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-500 ring-1 ring-white" title="Fear"></span>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-brand-navy">Refleksi Karakter & Emosi</h3>
+                            <p class="text-[10px] text-slate-400">Pertanyaan Inside Out untuk bahan penilaian</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-semibold text-brand-blue bg-blue-50 border border-blue-100 px-2.5 py-0.5 rounded-full">
+                        Inside Out
+                    </span>
+                </div>
+
+                <!-- Konten Jawaban Refleksi -->
+                <div id="detail-refleksi-content" class="p-4 space-y-4">
+                    <!-- Pertanyaan 1 -->
+                    <div class="rounded-xl border border-slate-200/80 bg-slate-50/40 p-3.5 space-y-2.5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-brand-navy flex items-center gap-1.5">
+                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-blue/10 text-brand-blue font-bold text-[10px]">1</span>
+                                Dinamika Kerja Tim & Emosi Dominan
+                            </span>
+                            <div id="detail-refleksi-q1-badge"></div>
+                        </div>
+                        <p class="text-[11px] text-slate-500 italic bg-white/70 rounded-lg p-2 border border-slate-100 leading-relaxed">
+                            "If you were one of the emotion characters in Inside Out, which emotion do you feel most often when you’re working with a team, and what usually brings it out?"
+                        </p>
+                        <div class="rounded-lg bg-white p-3 border border-slate-200 text-xs text-slate-700">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Alasan & Penjelasan:</p>
+                            <div id="detail-refleksi-q1-alasan" class="text-slate-800 font-normal leading-relaxed whitespace-pre-line">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Pertanyaan 2 -->
+                    <div class="rounded-xl border border-slate-200/80 bg-slate-50/40 p-3.5 space-y-2.5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-brand-navy flex items-center gap-1.5">
+                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-blue/10 text-brand-blue font-bold text-[10px]">2</span>
+                                Respon Terhadap Tantangan / Perbedaan
+                            </span>
+                            <div id="detail-refleksi-q2-badge"></div>
+                        </div>
+                        <p class="text-[11px] text-slate-500 italic bg-white/70 rounded-lg p-2 border border-slate-100 leading-relaxed">
+                            "If you were one of the emotion characters in Inside Out, when challenges or disagreements happen in your team, which emotion tends to take over—and what helps you handle it?"
+                        </p>
+                        <div class="rounded-lg bg-white p-3 border border-slate-200 text-xs text-slate-700">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Alasan & Penjelasan:</p>
+                            <div id="detail-refleksi-q2-alasan" class="text-slate-800 font-normal leading-relaxed whitespace-pre-line">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Pertanyaan 3 -->
+                    <div class="rounded-xl border border-slate-200/80 bg-slate-50/40 p-3.5 space-y-2.5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-brand-navy flex items-center gap-1.5">
+                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-blue/10 text-brand-blue font-bold text-[10px]">3</span>
+                                Adaptasi Terhadap Hal Baru & Tidak Dikenal
+                            </span>
+                            <div id="detail-refleksi-q3-badge"></div>
+                        </div>
+                        <p class="text-[11px] text-slate-500 italic bg-white/70 rounded-lg p-2 border border-slate-100 leading-relaxed">
+                            "If you were one of the emotion characters in Inside Out, when you’re facing something new or unfamiliar, which emotion usually speaks the loudest inside you?"
+                        </p>
+                        <div class="rounded-lg bg-white p-3 border border-slate-200 text-xs text-slate-700">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Alasan & Penjelasan:</p>
+                            <div id="detail-refleksi-q3-alasan" class="text-slate-800 font-normal leading-relaxed whitespace-pre-line">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- State Kosong jika belum ada data refleksi -->
+                <div id="detail-refleksi-empty" class="p-6 text-center hidden">
+                    <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                    </div>
+                    <p class="text-xs font-semibold text-slate-600">Belum ada jawaban refleksi Inside Out</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Kandidat ini belum mengisi kuesioner refleksi emosi.</p>
                 </div>
             </div>
 

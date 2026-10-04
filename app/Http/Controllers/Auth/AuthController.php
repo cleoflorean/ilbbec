@@ -7,6 +7,7 @@ use App\Models\Prodi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -33,25 +34,30 @@ class AuthController extends Controller
             'Angkatan'     => 'required|integer|digits:4',
             'Gender'       => 'required|in:Laki laki,Perempuan',
         ], [
-            'Npm.unique'   => 'NPM ini sudah terdaftar.',
-            'Email.unique' => 'Email ini sudah digunakan.',
+            'Npm.unique'         => 'NPM ini sudah terdaftar.',
+            'Email.unique'       => 'Email ini sudah digunakan.',
             'Password.confirmed' => 'Konfirmasi password tidak cocok.',
             'Angkatan.digits'    => 'Angkatan harus 4 digit (contoh: 2024).',
         ]);
 
-        User::create([
-            'ProdiId'      => $request->ProdiId,
-            'Nama'         => $request->Nama,
-            'Npm'          => $request->Npm,
-            'TempatLahir'  => $request->TempatLahir,
-            'TanggalLahir' => $request->TanggalLahir,
-            'NoTlp'        => $request->NoTlp,
-            'Email'        => strtolower($request->string('Email')->trim()->toString()),
-            'Password'     => Hash::make($request->Password),
-            'Angkatan'     => $request->Angkatan,
-            'Gender'       => $request->Gender,
-            'Role'         => 'user',
-        ]);
+        $emailClean = strtolower($request->string('Email')->trim()->toString());
+        $hashedPassword = Hash::make($request->Password);
+
+        DB::transaction(function () use ($request, $emailClean, $hashedPassword) {
+            User::create([
+                'ProdiId'      => $request->ProdiId,
+                'Nama'         => trim((string) $request->Nama),
+                'Npm'          => $request->Npm,
+                'TempatLahir'  => trim((string) $request->TempatLahir),
+                'TanggalLahir' => $request->TanggalLahir,
+                'NoTlp'        => trim((string) $request->NoTlp),
+                'Email'        => $emailClean,
+                'Password'     => $hashedPassword,
+                'Angkatan'     => $request->Angkatan,
+                'Gender'       => $request->Gender,
+                'Role'         => 'user',
+            ]);
+        });
 
         return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan masuk.');
     }

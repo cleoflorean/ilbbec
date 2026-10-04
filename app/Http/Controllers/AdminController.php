@@ -80,6 +80,7 @@ class AdminController extends Controller
         $pendaftaran = $this->scopeToRoleDivision(
             Pendaftaran::query()->with([
                 'user.prodi',
+                'refleksi',
                 'study_case.jadwal_sesi',
                 'wawancara.jadwal_sesi',
                 'jadwal_pendaftar.jadwal_sesi'
