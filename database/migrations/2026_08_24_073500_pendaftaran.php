@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('UserId');
             $table->string('Divisi', 50);
             $table->string('Divisi2', 50);
+            $table->string('Foto', 255);
             $table->string('BerkasCV', 255)->nullable();
             $table->string('Portofolio', 255)->nullable();
             $table->string('StatusBerkas', 10);

@@ -250,7 +250,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 {{-- Input: Divisi 1 --}}
                 <div class="mb-3">
                     <label for="pendaftaran-divisi-1" class="mb-1 block text-sm font-medium text-slate-700">Divisi Pilihan 1 <span class="text-red-500">*</span></label>
@@ -277,6 +277,14 @@
                         <option value="Curiculum">Curiculum</option>
                         <option value="Media & Information">Media & Information</option>
                     </select>
+                    <small class="text-xs text-slate-400">Pilihan divisi tidak boleh sama</small>
+                </div>
+
+                {{-- Input: Foto --}}
+                <div class="mb-3">
+                    <label for="pendaftaran-foto" class="mb-1 block text-sm font-medium text-slate-700">Foto Pribadi<span class="text-red-500">*</span></label>
+                    <input type="file" name="Foto" id="pendaftaran-foto" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-brand-blue hover:file:bg-blue-100 cursor-pointer" accept="image/*" required>
+                    <small class="text-xs text-slate-400">Format JPG/PNG, maksimal 2MB</small>
                 </div>
 
                 {{-- Input: CV --}}
@@ -288,7 +296,7 @@
 
                 {{-- Input: Portofolio --}}
                 <div class="mb-4">
-                    <label for="pendaftaran-portofolio" class="mb-1 block text-sm font-medium text-slate-700">Upload Portofolio Opsional (PDF)</label>
+                    <label for="pendaftaran-portofolio" class="mb-1 block text-sm font-medium text-slate-700">Upload Portofolio Opsional (PDF) <small class="text-xs text-slate-400">*Wajib jika memilih divisi Medinfo</small></label>
                     <input type="file" name="Portofolio" id="pendaftaran-portofolio" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-600 hover:file:bg-slate-200 cursor-pointer" accept="application/pdf">
                     <small class="text-xs text-slate-400">Format PDF, maksimal 5MB (opsional)</small>
                 </div>

@@ -24,6 +24,7 @@ class PendaftaranController extends Controller
         $request->validate([
             'Divisi'             => 'required|string|max:255',
             'Divisi2'            => 'required|string|max:255',
+            'Foto'               => 'required|file|image|mimes:jpeg,png|max:2048',
             'BerkasCV'           => 'required|file|mimes:pdf|max:2048',
             'Portofolio'         => 'nullable|file|mimes:pdf|max:5120',
             'Pertanyaan1_Emosi'  => 'nullable|string|in:Joy,Anger,Sadness,Disgust,Fear',
@@ -33,15 +34,9 @@ class PendaftaranController extends Controller
             'Pertanyaan3_Emosi'  => 'nullable|string|in:Joy,Anger,Sadness,Disgust,Fear',
             'Pertanyaan3_Alasan' => 'nullable|string|max:2000',
         ]);
-
-        $cvFileName = 'CV_' . $userId . '_' . time() . '.pdf';
-        $BerkasCVPath = $request->file('BerkasCV')->storeAs('BerkasCV', $cvFileName, 'public');
-
+        $fotoPath = null;
+        $BerkasCVPath = null;
         $portofolioPath = null;
-        if ($request->hasFile('Portofolio')) {
-            $portfolioFileName = 'Portofolio_' . $userId . '_' . time() . '.pdf';
-            $portofolioPath = $request->file('Portofolio')->storeAs('Portofolio', $portfolioFileName, 'public');
-        }
 
         $refleksi = [
             'Pertanyaan1_Emosi'  => $request->Pertanyaan1_Emosi,
@@ -53,7 +48,28 @@ class PendaftaranController extends Controller
         ];
 
         try {
-            DB::transaction(function () use ($userId, $request, $BerkasCVPath, $portofolioPath, $refleksi) {
+            $foto = $request->file('Foto');
+            $fotoFileName = 'Foto_' . $userId . '_' . time() . '.' . $foto->extension();
+            $fotoPath = $foto->storeAs('Foto', $fotoFileName, 'public');
+            if (! $fotoPath) {
+                throw new \RuntimeException('Foto gagal disimpan ke storage public.');
+            }
+
+            $cvFileName = 'CV_' . $userId . '_' . time() . '.pdf';
+            $BerkasCVPath = $request->file('BerkasCV')->storeAs('BerkasCV', $cvFileName, 'public');
+            if (! $BerkasCVPath) {
+                throw new \RuntimeException('CV gagal disimpan ke storage public.');
+            }
+
+            if ($request->hasFile('Portofolio')) {
+                $portfolioFileName = 'Portofolio_' . $userId . '_' . time() . '.pdf';
+                $portofolioPath = $request->file('Portofolio')->storeAs('Portofolio', $portfolioFileName, 'public');
+                if (! $portofolioPath) {
+                    throw new \RuntimeException('Portofolio gagal disimpan ke storage public.');
+                }
+            }
+
+            DB::transaction(function () use ($userId, $request, $fotoPath, $BerkasCVPath, $portofolioPath, $refleksi) {
                 // Cek sekali lagi di dalam transaksi untuk menghindari race condition
                 if (Pendaftaran::where('UserId', $userId)->exists()) {
                     return;
@@ -63,6 +79,7 @@ class PendaftaranController extends Controller
                     'UserId'       => $userId,
                     'Divisi'       => $request->Divisi,
                     'Divisi2'      => $request->Divisi2,
+                    'Foto'         => $fotoPath,
                     'BerkasCV'     => $BerkasCVPath,
                     'Portofolio'   => $portofolioPath,
                     'StatusBerkas' => 'Menunggu',
@@ -89,6 +106,9 @@ class PendaftaranController extends Controller
             }
             if ($portofolioPath) {
                 Storage::disk('public')->delete($portofolioPath);
+            }
+            if ($fotoPath) {
+                Storage::disk('public')->delete($fotoPath);
             }
 
             Log::error('Pendaftaran gagal untuk UserId ' . $userId . ': ' . $e->getMessage());

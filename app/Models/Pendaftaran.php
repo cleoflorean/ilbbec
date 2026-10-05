@@ -9,7 +9,7 @@ class Pendaftaran extends Model
     protected $table = 'pendaftaran';
     protected $primaryKey = 'PendaftaranId';
     protected $fillable = [
-        'UserId', 'Divisi', 'Divisi2', 'BerkasCV', 'Portofolio', 'StatusBerkas', 'StatusAkhir'
+        'UserId', 'Divisi', 'Divisi2','Foto', 'BerkasCV', 'Portofolio', 'StatusBerkas', 'StatusAkhir'
     ];
 
     public function user()

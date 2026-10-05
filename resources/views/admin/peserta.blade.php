@@ -112,6 +112,7 @@
                                 data-detail-angkatan="{{ $item->user?->Angkatan ?? '-' }}"
                                 data-detail-divisi="{{ $item->Divisi ?? '-' }}"
                                 data-detail-divisi2="{{ $item->Divisi2 ?? '-' }}"
+                                data-detail-foto="{{ $item->Foto ? Storage::url($item->Foto) : '' }}"
                                 data-detail-status-terkini="{{ $item->statusTerkini ?? 'Seleksi Berkas' }}"
                                 data-detail-status-akhir="{{ $item->StatusAkhir ?? 'Dalam Proses' }}"
                                 data-status-berkas="{{ $item->StatusBerkas ?? '' }}"
@@ -119,6 +120,7 @@
                                 data-status-wawancara="{{ $item->wawancara?->StatusWawancara ?? '' }}"
                                 data-detail-date="{{ $item->created_at ? $item->created_at->format('d M Y, H:i') : '-' }}"
                                 data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}"
+                                data-detail-portofolio="{{ $item->Portofolio ? Storage::url($item->Portofolio) : '' }}"
                                 data-refleksi-q1-emosi="{{ $item->refleksi?->Pertanyaan1_Emosi ?? '' }}"
                                 data-refleksi-q1-alasan="{{ $item->refleksi?->Pertanyaan1_Alasan ?? '' }}"
                                 data-refleksi-q2-emosi="{{ $item->refleksi?->Pertanyaan2_Emosi ?? '' }}"
@@ -218,6 +220,7 @@
                         data-detail-angkatan="{{ $item->user?->Angkatan ?? '-' }}"
                         data-detail-divisi="{{ $item->Divisi ?? '-' }}"
                         data-detail-divisi2="{{ $item->Divisi2 ?? '-' }}"
+                        data-detail-foto="{{ $item->Foto ? Storage::url($item->Foto) : '' }}"
                         data-detail-status-terkini="{{ $item->statusTerkini ?? 'Seleksi Berkas' }}"
                         data-detail-status-akhir="{{ $item->StatusAkhir ?? 'Dalam Proses' }}"
                         data-status-berkas="{{ $item->StatusBerkas ?? '' }}"
@@ -225,6 +228,7 @@
                         data-status-wawancara="{{ $item->wawancara?->StatusWawancara ?? '' }}"
                         data-detail-date="{{ $item->created_at ? $item->created_at->format('d M Y, H:i') : '-' }}"
                         data-detail-cv="{{ $item->BerkasCV ? Storage::url($item->BerkasCV) : '' }}"
+                        data-detail-portofolio="{{ $item->Portofolio ? Storage::url($item->Portofolio) : '' }}"
                         data-refleksi-q1-emosi="{{ $item->refleksi?->Pertanyaan1_Emosi ?? '' }}"
                         data-refleksi-q1-alasan="{{ $item->refleksi?->Pertanyaan1_Alasan ?? '' }}"
                         data-refleksi-q2-emosi="{{ $item->refleksi?->Pertanyaan2_Emosi ?? '' }}"
@@ -354,6 +358,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalStatusWawancara = document.getElementById('detail-status-wawancara');
     const modalTanggal = document.getElementById('detail-tanggal');
     const modalCv = document.getElementById('detail-cv');
+    const modalFoto = document.getElementById('detail-foto');
+    const modalPortofolio = document.getElementById('detail-portofolio');
 
     // REFLEKSI INSIDE OUT ELEMENTS
     const refleksiContent = document.getElementById('detail-refleksi-content');
@@ -457,6 +463,23 @@ document.addEventListener('DOMContentLoaded', () => {
             modalCv.classList.remove('hidden');
         } else {
             modalCv.classList.add('hidden');
+        }
+
+        // Foto
+        if (element.dataset.detailFoto) {
+            modalFoto.href = element.dataset.detailFoto;
+            modalFoto.classList.remove('hidden');
+        } else {
+            modalFoto.classList.add('hidden');
+        }
+
+        
+        // Portofolio
+        if (element.dataset.detailPortofolio) {
+            modalPortofolio.href = element.dataset.detailPortofolio;
+            modalPortofolio.classList.remove('hidden');
+        } else {
+            modalPortofolio.classList.add('hidden');
         }
 
         // REFLEKSI INSIDE OUT
